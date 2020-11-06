@@ -1,7 +1,7 @@
 ---
 title: OAuth 2.0 Client Intermediary Metadata
-docname: draft-parecki-oauth-client-intermediary-metadata-00
-date: 2019-08-29
+docname: draft-parecki-oauth-client-intermediary-metadata-01
+date: 2020-05-08
 
 ipr: trust200902
 area: OAuth
@@ -281,11 +281,18 @@ The authorization server chooses how best to display the additional information,
 Once an access token has been issued to this client, the client uses the access token to make requests at the resource server on behalf of the specific end user application on behalf of the end user.
 
 
+Security Considerations
+=======================
+
+As this extends {{RFC7591}}, all security considerations from that draft apply here as well. 
+
+Specifically, if the authorization server supports open client registration without any authentication, it must be careful with any URLs received in the registration request such as `logo_uri`, `tos_uri`, and `uri`, as these values will be shown to end users. {{RFC7591}} recommends requiring that these URIs have a matching host and scheme as the defined `redirect_uri`s, and that they are resolvable URIs. See section 5 of {{RFC7591}} for more details.
+
 
 Acknowledgements
 ================
 
-The authors would like to thank Ryan Christiansen and Preston McFarland for their initial contributions of the concepts behind this specification. The authors would also like to thank the OAuth Working Group for their work on the referenced and related specifications that this specification builds upon.
+The authors would like to thank Ryan Christiansen and Preston McFarland for their initial contributions of the concepts behind this specification. The authors would also like to thank Don Cardinal, Ryan Christiansen and Preston McFarland for their reviews of this specification. Additionally the work of the OAuth Working Group on the referenced and related specifications that this specification builds upon is much appreciated.
 
 
 --- fluff
