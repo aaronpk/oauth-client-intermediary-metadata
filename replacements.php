@@ -1,4 +1,4 @@
-#!/usr/local/bin/php
+#!/usr/bin/php
 <?php
 
 $xml = file_get_contents('build/oauth-client-intermediary-metadata.xml');

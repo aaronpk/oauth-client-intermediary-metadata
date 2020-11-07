@@ -4,12 +4,12 @@
 
 Open Authentication Protocol                                  A. Parecki
 Internet-Draft                                                      Okta
-Intended status: Standards Track                         August 29, 2019
-Expires: March 1, 2020
+Intended status: Standards Track                       November 06, 2020
+Expires: May 10, 2021
 
 
                  OAuth 2.0 Client Intermediary Metadata
-          draft-parecki-oauth-client-intermediary-metadata-00
+          draft-parecki-oauth-client-intermediary-metadata-02
 
 Abstract
 
@@ -34,11 +34,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on March 1, 2020.
+   This Internet-Draft will expire on May 10, 2021.
 
 Copyright Notice
 
-   Copyright (c) 2019 IETF Trust and the persons identified as the
+   Copyright (c) 2020 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -53,25 +53,26 @@ Copyright Notice
 
 
 
-Parecki                   Expires March 1, 2020                 [Page 1]
+Parecki                   Expires May 10, 2021                  [Page 1]
 
-Internet-Draft   OAuth 2.0 Client Intermediary Metadata      August 2019
+Internet-Draft   OAuth 2.0 Client Intermediary Metadata    November 2020
 
 
 1.  Introduction
 
    In some applications of OAuth, an OAuth client is acting on behalf of
    one or more intermediary or user-facing applications, and is not the
-   entity that the user has an established relationship with.  In the
-   traditional OAuth model, a client_id represents only one application,
-   and so the consent screen lists just one third party: the OAuth
-   client.  In these cases, it is not appropriate to list only the
-   actual OAuth client or only the user-facing application.  Listing
-   only the actual OAuth client would be confusing to the user, since
-   the user does not have a relationship with this entity.  Listing only
-   the user-facing application would be inaccurate and misrepresent the
-   situation, since the user would be unaware that their data is
-   actually being handled by additional parties.
+   entity that the user has an established relationship with.
+
+   In the traditional OAuth model, a "client_id" represents only one
+   application, and so the OAuth consent screen lists just one third
+   party: the OAuth client.  In these cases, it is not appropriate to
+   list only the actual OAuth client or only the user-facing
+   application.  Listing only the actual OAuth client would be confusing
+   to the user, since the user does not have a relationship with this
+   entity.  Listing only the user-facing application would be inaccurate
+   and misrepresent the situation, since the user would be unaware that
+   their data is actually being handled by additional parties.
 
    This specification extends [RFC7591] and [RFC7592] to define a
    mechanism for including information about the additional parties
@@ -105,15 +106,15 @@ Internet-Draft   OAuth 2.0 Client Intermediary Metadata      August 2019
 
    "Intermediary":  One or more entities that the user's data will pass
       through or be shared with by using the OAuth client.  This
-      information is voluntarily provided by the OAuth client, and is
 
 
 
-Parecki                   Expires March 1, 2020                 [Page 2]
+Parecki                   Expires May 10, 2021                  [Page 2]
 
-Internet-Draft   OAuth 2.0 Client Intermediary Metadata      August 2019
+Internet-Draft   OAuth 2.0 Client Intermediary Metadata    November 2020
 
 
+      information is voluntarily provided by the OAuth client, and is
       typically enforced by a business relationship between the
       organization providing the Client and the organization providing
       the Resource Server.
@@ -164,10 +165,9 @@ Internet-Draft   OAuth 2.0 Client Intermediary Metadata      August 2019
 
 
 
-
-Parecki                   Expires March 1, 2020                 [Page 3]
+Parecki                   Expires May 10, 2021                  [Page 3]
 
-Internet-Draft   OAuth 2.0 Client Intermediary Metadata      August 2019
+Internet-Draft   OAuth 2.0 Client Intermediary Metadata    November 2020
 
 
    "uri"
@@ -221,9 +221,9 @@ Internet-Draft   OAuth 2.0 Client Intermediary Metadata      August 2019
 
 
 
-Parecki                   Expires March 1, 2020                 [Page 4]
+Parecki                   Expires May 10, 2021                  [Page 4]
 
-Internet-Draft   OAuth 2.0 Client Intermediary Metadata      August 2019
+Internet-Draft   OAuth 2.0 Client Intermediary Metadata    November 2020
 
 
    To register, the client or developer sends an HTTP POST as described
@@ -277,9 +277,9 @@ Internet-Draft   OAuth 2.0 Client Intermediary Metadata      August 2019
 
 
 
-Parecki                   Expires March 1, 2020                 [Page 5]
+Parecki                   Expires May 10, 2021                  [Page 5]
 
-Internet-Draft   OAuth 2.0 Client Intermediary Metadata      August 2019
+Internet-Draft   OAuth 2.0 Client Intermediary Metadata    November 2020
 
 
 5.2.  Client Registration Response
@@ -333,9 +333,9 @@ Internet-Draft   OAuth 2.0 Client Intermediary Metadata      August 2019
 
 
 
-Parecki                   Expires March 1, 2020                 [Page 6]
+Parecki                   Expires May 10, 2021                  [Page 6]
 
-Internet-Draft   OAuth 2.0 Client Intermediary Metadata      August 2019
+Internet-Draft   OAuth 2.0 Client Intermediary Metadata    November 2020
 
 
     HTTP/1.1 201 Created
@@ -389,9 +389,9 @@ Internet-Draft   OAuth 2.0 Client Intermediary Metadata      August 2019
 
 
 
-Parecki                   Expires March 1, 2020                 [Page 7]
+Parecki                   Expires May 10, 2021                  [Page 7]
 
-Internet-Draft   OAuth 2.0 Client Intermediary Metadata      August 2019
+Internet-Draft   OAuth 2.0 Client Intermediary Metadata    November 2020
 
 
 5.3.  Client Read Request
@@ -445,20 +445,36 @@ Internet-Draft   OAuth 2.0 Client Intermediary Metadata      August 2019
 
 
 
-Parecki                   Expires March 1, 2020                 [Page 8]
+Parecki                   Expires May 10, 2021                  [Page 8]
 
-Internet-Draft   OAuth 2.0 Client Intermediary Metadata      August 2019
+Internet-Draft   OAuth 2.0 Client Intermediary Metadata    November 2020
 
 
-7.  Acknowledgements
+7.  Security Considerations
+
+   As this extends [RFC7591], all security considerations from that
+   draft apply here as well.
+
+   Specifically, if the authorization server supports open client
+   registration without any authentication, it must be extremely careful
+   with any URLs received in the registration request such as
+   "logo_uri", "tos_uri", and "uri", as these values may be displayed to
+   end users.  [RFC7591] recommends requiring that these URIs have a
+   matching host and scheme as the defined "redirect_uri"s, and that
+   they are resolvable URIs.  See section 5 of [RFC7591] for more
+   details.
+
+8.  Acknowledgements
 
    The authors would like to thank Ryan Christiansen and Preston
    McFarland for their initial contributions of the concepts behind this
-   specification.  The authors would also like to thank the OAuth
-   Working Group for their work on the referenced and related
-   specifications that this specification builds upon.
+   specification.  The authors would also like to thank Don Cardinal,
+   Ryan Christiansen and Preston McFarland for their reviews of this
+   specification.  Additionally the work of the OAuth Working Group on
+   the referenced and related specifications that this specification
+   builds upon is much appreciated.
 
-8.  Normative References
+9.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -483,6 +499,13 @@ Internet-Draft   OAuth 2.0 Client Intermediary Metadata      August 2019
               Protocol", RFC 7592, DOI 10.17487/RFC7592, July 2015,
               <https://www.rfc-editor.org/info/rfc7592>.
 
+
+
+Parecki                   Expires May 10, 2021                  [Page 9]
+
+Internet-Draft   OAuth 2.0 Client Intermediary Metadata    November 2020
+
+
 Author's Address
 
    Aaron Parecki
@@ -501,4 +524,37 @@ Author's Address
 
 
 
-Parecki                   Expires March 1, 2020                 [Page 9]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Parecki                   Expires May 10, 2021                 [Page 10]

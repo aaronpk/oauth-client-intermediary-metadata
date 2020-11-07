@@ -385,19 +385,20 @@
 <link href="#rfc.section.5.4" rel="Chapter" title="5.4 Client Update Request">
 <link href="#rfc.section.5.5" rel="Chapter" title="5.5 Client Delete Request">
 <link href="#rfc.section.6" rel="Chapter" title="6 Providing End-User Application Details in the Authorization Request">
-<link href="#rfc.section.7" rel="Chapter" title="7 Acknowledgements">
-<link href="#rfc.references" rel="Chapter" title="8 Normative References">
+<link href="#rfc.section.7" rel="Chapter" title="7 Security Considerations">
+<link href="#rfc.section.8" rel="Chapter" title="8 Acknowledgements">
+<link href="#rfc.references" rel="Chapter" title="9 Normative References">
 <link href="#rfc.authors" rel="Chapter">
 
 
-  <meta name="generator" content="xml2rfc version 2.25.0 - https://tools.ietf.org/tools/xml2rfc" />
+  <meta name="generator" content="xml2rfc version 3.3.0 - https://tools.ietf.org/tools/xml2rfc" />
   <link rel="schema.dct" href="http://purl.org/dc/terms/" />
 
   <meta name="dct.creator" content="Parecki, A." />
-  <meta name="dct.identifier" content="urn:ietf:id:draft-parecki-oauth-client-intermediary-metadata-00" />
-  <meta name="dct.issued" scheme="ISO8601" content="2019-08-29" />
-  <meta name="dct.abstract" content="This specification defines a mechanism for including information about additional parties involved in an OAuth transaction by adding a new section to the OAuth 2.0 Dynamic Client Registration request, as well as requires that authorization servers surface this information to users during an OAuth transaction." />
-  <meta name="description" content="This specification defines a mechanism for including information about additional parties involved in an OAuth transaction by adding a new section to the OAuth 2.0 Dynamic Client Registration request, as well as requires that authorization servers surface this information to users during an OAuth transaction." />
+  <meta name="dct.identifier" content="urn:ietf:id:draft-parecki-oauth-client-intermediary-metadata-02" />
+  <meta name="dct.issued" scheme="ISO8601" content="2020-11-06" />
+  <meta name="dct.abstract" content="This specification defines a mechanism for including information about additional parties involved in an OAuth transaction by adding a new section to the OAuth 2.0 Dynamic Client Registration request, as well as requires that authorization servers surface this information to users during an OAuth transaction. " />
+  <meta name="description" content="This specification defines a mechanism for including information about additional parties involved in an OAuth transaction by adding a new section to the OAuth 2.0 Dynamic Client Registration request, as well as requires that authorization servers surface this information to users during an OAuth transaction. " />
 
 </head>
 
@@ -416,10 +417,10 @@
 </tr>
 <tr>
 <td class="left">Intended status: Standards Track</td>
-<td class="right">August 29, 2019</td>
+<td class="right">November 06, 2020</td>
 </tr>
 <tr>
-<td class="left">Expires: March 1, 2020</td>
+<td class="left">Expires: May 10, 2021</td>
 <td class="right"></td>
 </tr>
 
@@ -428,7 +429,7 @@
   </table>
 
   <p class="title">OAuth 2.0 Client Intermediary Metadata<br />
-  <span class="filename">draft-parecki-oauth-client-intermediary-metadata-00</span></p>
+  <span class="filename">draft-parecki-oauth-client-intermediary-metadata-02</span></p>
   
   <h1 id="rfc.abstract"><a href="#rfc.abstract">Abstract</a></h1>
 <p>This specification defines a mechanism for including information about additional parties involved in an OAuth transaction by adding a new section to the OAuth 2.0 Dynamic Client Registration request, as well as requires that authorization servers surface this information to users during an OAuth transaction.</p>
@@ -436,15 +437,16 @@
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at https://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on March 1, 2020.</p>
+<p>This Internet-Draft will expire on May 10, 2021.</p>
 <h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
-<p>Copyright (c) 2019 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
+<p>Copyright (c) 2020 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
 <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (https://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
 <h1 id="rfc.section.1">
 <a href="#rfc.section.1">1.</a> <a href="#introduction" id="introduction">Introduction</a>
 </h1>
-<p id="rfc.section.1.p.1">In some applications of OAuth, an OAuth client is acting on behalf of one or more intermediary or user-facing applications, and is not the entity that the user has an established relationship with. In the traditional OAuth model, a client_id represents only one application, and so the consent screen lists just one third party: the OAuth client. In these cases, it is not appropriate to list only the actual OAuth client or only the user-facing application. Listing only the actual OAuth client would be confusing to the user, since the user does not have a relationship with this entity.  Listing only the user-facing application would be inaccurate and misrepresent the situation, since the user would be unaware that their data is actually being handled by additional parties.</p>
-<p id="rfc.section.1.p.2">This specification extends <a href="#RFC7591" class="xref">[RFC7591]</a> and <a href="#RFC7592" class="xref">[RFC7592]</a> to define a mechanism for including information about the additional parties involved in an OAuth transaction by including information about the additional intermediaries as well as the user-facing application into the Dynamic Client Registration request. This specification also defines requirements of the OAuth authorization server to present this information about the additional parties in the OAuth consent screen during an OAuth transaction.</p>
+<p id="rfc.section.1.p.1">In some applications of OAuth, an OAuth client is acting on behalf of one or more intermediary or user-facing applications, and is not the entity that the user has an established relationship with.</p>
+<p id="rfc.section.1.p.2">In the traditional OAuth model, a <samp>client_id</samp> represents only one application, and so the OAuth consent screen lists just one third party: the OAuth client. In these cases, it is not appropriate to list only the actual OAuth client or only the user-facing application. Listing only the actual OAuth client would be confusing to the user, since the user does not have a relationship with this entity.  Listing only the user-facing application would be inaccurate and misrepresent the situation, since the user would be unaware that their data is actually being handled by additional parties.</p>
+<p id="rfc.section.1.p.3">This specification extends <a href="#RFC7591" class="xref">[RFC7591]</a> and <a href="#RFC7592" class="xref">[RFC7592]</a> to define a mechanism for including information about the additional parties involved in an OAuth transaction by including information about the additional intermediaries as well as the user-facing application into the Dynamic Client Registration request. This specification also defines requirements of the OAuth authorization server to present this information about the additional parties in the OAuth consent screen during an OAuth transaction.</p>
 <h1 id="rfc.section.2">
 <a href="#rfc.section.2">2.</a> <a href="#notational-conventions" id="notational-conventions">Notational Conventions</a>
 </h1>
@@ -612,11 +614,16 @@
 <p id="rfc.section.6.p.3">The authorization server chooses how best to display the additional information, but it MUST include at least the name of the end user application, intermediaries, and client, and SHOULD include the logo of each as well.</p>
 <p id="rfc.section.6.p.4">Once an access token has been issued to this client, the client uses the access token to make requests at the resource server on behalf of the specific end user application on behalf of the end user.</p>
 <h1 id="rfc.section.7">
-<a href="#rfc.section.7">7.</a> <a href="#acknowledgements" id="acknowledgements">Acknowledgements</a>
+<a href="#rfc.section.7">7.</a> <a href="#security-considerations" id="security-considerations">Security Considerations</a>
 </h1>
-<p id="rfc.section.7.p.1">The authors would like to thank Ryan Christiansen and Preston McFarland for their initial contributions of the concepts behind this specification. The authors would also like to thank the OAuth Working Group for their work on the referenced and related specifications that this specification builds upon.</p>
+<p id="rfc.section.7.p.1">As this extends <a href="#RFC7591" class="xref">[RFC7591]</a>, all security considerations from that draft apply here as well.</p>
+<p id="rfc.section.7.p.2">Specifically, if the authorization server supports open client registration without any authentication, it must be extremely careful with any URLs received in the registration request such as <samp>logo_uri</samp>, <samp>tos_uri</samp>, and <samp>uri</samp>, as these values may be displayed to end users. <a href="#RFC7591" class="xref">[RFC7591]</a> recommends requiring that these URIs have a matching host and scheme as the defined <samp>redirect_uri</samp>s, and that they are resolvable URIs. See section 5 of <a href="#RFC7591" class="xref">[RFC7591]</a> for more details.</p>
+<h1 id="rfc.section.8">
+<a href="#rfc.section.8">8.</a> <a href="#acknowledgements" id="acknowledgements">Acknowledgements</a>
+</h1>
+<p id="rfc.section.8.p.1">The authors would like to thank Ryan Christiansen and Preston McFarland for their initial contributions of the concepts behind this specification. The authors would also like to thank Don Cardinal, Ryan Christiansen and Preston McFarland for their reviews of this specification. Additionally the work of the OAuth Working Group on the referenced and related specifications that this specification builds upon is much appreciated.</p>
 <h1 id="rfc.references">
-<a href="#rfc.references">8.</a> Normative References</h1>
+<a href="#rfc.references">9.</a> Normative References</h1>
 <table><tbody>
 <tr>
 <td class="reference"><b id="RFC2119">[RFC2119]</b></td>
@@ -696,9 +703,11 @@
 </li>
 </ul><li>6.   <a href="#rfc.section.6">Providing End-User Application Details in the Authorization Request</a>
 </li>
-<li>7.   <a href="#rfc.section.7">Acknowledgements</a>
+<li>7.   <a href="#rfc.section.7">Security Considerations</a>
 </li>
-<li>8.   <a href="#rfc.references">Normative References</a>
+<li>8.   <a href="#rfc.section.8">Acknowledgements</a>
+</li>
+<li>9.   <a href="#rfc.references">Normative References</a>
 </li>
 <li><a href="#rfc.authors">Author's Address</a>
 </li>
