@@ -43,8 +43,10 @@ Introduction {#introduction}
 
 In some applications of OAuth, an OAuth client is acting on behalf of one or more
 intermediary or user-facing applications, and is not the entity that the user has 
-an established relationship with. In the traditional OAuth model, a client_id 
-represents only one application, and so the consent screen lists just one third party: 
+an established relationship with. 
+
+In the traditional OAuth model, a `client_id` 
+represents only one application, and so the OAuth consent screen lists just one third party: 
 the OAuth client. In these cases, it is not appropriate to list only the actual 
 OAuth client or only the user-facing application. Listing only the actual OAuth client 
 would be confusing to the user, since the user does not have a relationship with this entity. 
@@ -284,9 +286,9 @@ Once an access token has been issued to this client, the client uses the access 
 Security Considerations
 =======================
 
-As this extends {{RFC7591}}, all security considerations from that draft apply here as well. 
+As this extends {{RFC7591}}, all security considerations from that draft apply here as well.
 
-Specifically, if the authorization server supports open client registration without any authentication, it must be careful with any URLs received in the registration request such as `logo_uri`, `tos_uri`, and `uri`, as these values will be shown to end users. {{RFC7591}} recommends requiring that these URIs have a matching host and scheme as the defined `redirect_uri`s, and that they are resolvable URIs. See section 5 of {{RFC7591}} for more details.
+Specifically, if the authorization server supports open client registration without any authentication, it must be extremely careful with any URLs received in the registration request such as `logo_uri`, `tos_uri`, and `uri`, as these values may be displayed to end users. {{RFC7591}} recommends requiring that these URIs have a matching host and scheme as the defined `redirect_uri`s, and that they are resolvable URIs. See section 5 of {{RFC7591}} for more details.
 
 
 Acknowledgements
