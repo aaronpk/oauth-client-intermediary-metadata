@@ -1,7 +1,7 @@
 ---
 title: OAuth 2.0 Client Intermediary Metadata
-docname: draft-parecki-oauth-client-intermediary-metadata-02
-date: 2020-11-06
+docname: draft-parecki-oauth-client-intermediary-metadata-03
+date: 2021-02-22
 
 ipr: trust200902
 area: OAuth
@@ -293,7 +293,7 @@ Specifically, if the authorization server supports open client registration with
 Acknowledgements
 ================
 
-The authors would like to thank Ryan Christiansen and Preston McFarland for their initial contributions of the concepts behind this specification. The authors would also like to thank Don Cardinal, Ryan Christiansen and Preston McFarland for their reviews of this specification. Additionally the work of the OAuth Working Group on the referenced and related specifications that this specification builds upon is much appreciated.
+The author would like to thank Ryan Christiansen and Preston McFarland for their initial contributions of the concepts behind this specification. The author would also like to thank Don Cardinal, Ryan Christiansen and Preston McFarland for their reviews of this specification, as well as Anil Mahalaha and other members of the Financial Data Exchange working group. Additionally the work of the OAuth Working Group on the referenced and related specifications that this specification builds upon is much appreciated.
 
 
 --- fluff
