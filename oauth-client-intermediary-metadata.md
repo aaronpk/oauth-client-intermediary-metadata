@@ -41,20 +41,19 @@ authorization servers surface this information to users during an OAuth transact
 Introduction {#introduction}
 ============
 
-In some applications of OAuth, an OAuth client is acting on behalf of one or more
-intermediary or user-facing applications, and is not the entity that the user has
-an established relationship with.
+In some applications of OAuth, there may be multiple legal entities which have access
+to or process data retrieved by an OAuth client. In the traditional OAuth model,
+a `client_id` represents only a single application, and so the OAuth consent screen
+lists just one third party: the OAuth client.
 
-In the traditional OAuth model, a `client_id`
-represents only one application, and so the OAuth consent screen lists just one third party:
-the OAuth client. In these cases, it is not appropriate to list only the actual
-OAuth client or only the user-facing application. Listing only the actual OAuth client
-would be confusing to the user, since the user does not have a relationship with this entity.
-Listing only the user-facing application would be inaccurate and misrepresent the
-situation, since the user would be unaware that their data is actually being handled
-by additional parties.
+In this situation, in order to comply with various local laws and regulations,
+the user needs to be informed by the authorization server of the list of entities
+that will have access to their data after authorizing the client.
 
-This specification extends {{RFC7591}} and {{RFC7592}} to define a mechanism for including information about the additional parties involved in an OAuth transaction by including information about the additional intermediaries as well as the user-facing application into the Dynamic Client Registration request. This specification also defines requirements of the OAuth authorization server to present this information about the additional parties in the OAuth consent screen during an OAuth transaction.
+The existing Dynamic Client Registration ({{RFC7591}}) specification lacks a mechanism
+for communicating a list of additional parties that may have access to the user's data.
+
+This specification extends {{RFC7591}} and {{RFC7592}} to define a mechanism for including information about the additional parties involved in an OAuth transaction by including information about the additional intermediaries into the Dynamic Client Registration request. This specification also defines requirements of the OAuth authorization server to present this information about the additional parties in the OAuth consent screen during an OAuth transaction.
 
 
 Notational Conventions
@@ -89,7 +88,7 @@ the following terms:
 
 "Client":
 : "Client" has the same definition as in OAuth 2.0, but is worth pointing out explicitly
-  here that the client in this case is requesting and obtaining permission from the user
+  that the client in this context is requesting and obtaining permission from the user
   to access their resources while acting on behalf of the End User Application.
 
 
