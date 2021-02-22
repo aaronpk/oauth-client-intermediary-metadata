@@ -9,7 +9,7 @@ Expires: August 26, 2021
 
 
                  OAuth 2.0 Client Intermediary Metadata
-          draft-parecki-oauth-client-intermediary-metadata-02
+          draft-parecki-oauth-client-intermediary-metadata-03
 
 Abstract
 
@@ -146,7 +146,7 @@ Internet-Draft   OAuth 2.0 Client Intermediary Metadata    February 2021
    Some fields are expected to be displayed in the OAuth consent UI and
    are designated accordingly.
 
-   "intermediary_name"
+   "name"
 
    REQUIRED.  A human-readable name of intermediary party.
    Authorization servers MUST display this field to the end user on the
@@ -157,7 +157,7 @@ Internet-Draft   OAuth 2.0 Client Intermediary Metadata    February 2021
    OPTIONAL.  A human-readable description of the intermediary.  This is
    not intended to be displayed in the OAuth consent screen.
 
-   "intermediaty_uri"
+   "uri"
 
    A URL string of a web page providing information about the
    intermediary.  If present, the authorization server SHOULD display
@@ -215,8 +215,8 @@ Internet-Draft   OAuth 2.0 Client Intermediary Metadata    February 2021
    To register, the client or developer sends an HTTP POST as described
    in Section 3.1 of [RFC7591], with an additional property named
    "intermediaries" with a JSON array of objects of each intermediary's
-   registration information.
-
+   registration information.  The properties of the object are described
+   above in Section 4.
 
 
 

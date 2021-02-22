@@ -395,7 +395,7 @@
   <link rel="schema.dct" href="http://purl.org/dc/terms/" />
 
   <meta name="dct.creator" content="Parecki, A." />
-  <meta name="dct.identifier" content="urn:ietf:id:draft-parecki-oauth-client-intermediary-metadata-02" />
+  <meta name="dct.identifier" content="urn:ietf:id:draft-parecki-oauth-client-intermediary-metadata-03" />
   <meta name="dct.issued" scheme="ISO8601" content="2021-02-22" />
   <meta name="dct.abstract" content="This specification defines a mechanism for including information about additional parties involved in an OAuth transaction by adding a new section to the OAuth 2.0 Dynamic Client Registration request, as well as requires that authorization servers surface this information to users during an OAuth transaction. " />
   <meta name="description" content="This specification defines a mechanism for including information about additional parties involved in an OAuth transaction by adding a new section to the OAuth 2.0 Dynamic Client Registration request, as well as requires that authorization servers surface this information to users during an OAuth transaction. " />
@@ -429,7 +429,7 @@
   </table>
 
   <p class="title">OAuth 2.0 Client Intermediary Metadata<br />
-  <span class="filename">draft-parecki-oauth-client-intermediary-metadata-02</span></p>
+  <span class="filename">draft-parecki-oauth-client-intermediary-metadata-03</span></p>
   
   <h1 id="rfc.abstract"><a href="#rfc.abstract">Abstract</a></h1>
 <p>This specification defines a mechanism for including information about additional parties involved in an OAuth transaction by adding a new section to the OAuth 2.0 Dynamic Client Registration request, as well as requires that authorization servers surface this information to users during an OAuth transaction.</p>
@@ -468,7 +468,7 @@
 <dd style="margin-left: 8">One or more entities that the user's data will pass through or be shared with by using the OAuth client. This information is voluntarily provided by the OAuth client, and is typically enforced by a business relationship between the organization providing the Client and the organization providing the Resource Server.</dd>
 </dl>
 <h1 id="rfc.section.4">
-<a href="#rfc.section.4">4.</a> <a href="#client-intermediary-metadata" id="client-intermediary-metadata">Client Intermediary Metadata</a>
+<a href="#rfc.section.4">4.</a> <a href="#metadata-fields" id="metadata-fields">Client Intermediary Metadata</a>
 </h1>
 <p id="rfc.section.4.p.1">Registered client intermediaries have a set of metadata values associated with the client identifier of the client that represents them in the OAuth transaction, such as a user-visible name, logo, and URL.</p>
 <p id="rfc.section.4.p.2">Like the OAuth client metadata defined in <a href="#RFC7591" class="xref">[RFC7591]</a> and <a href="#RFC7592" class="xref">[RFC7592]</a>, these metadata values are used in the following ways:</p>
@@ -481,11 +481,11 @@
 <p id="rfc.section.4.p.4">These values are used by the authorization server when displaying the OAuth consent screen to the end user, to inform them of all the additional parties that will be handling the user's data upon approval.</p>
 <p id="rfc.section.4.p.5">The following metadata fields are defined by this specification. The implementation and use of the fields is OPTIONAL unless stated otherwise. All data member types (strings, arrays, numbers) are defined in terms of their JSON (<a href="#RFC7159" class="xref">[RFC7159]</a>) representations.</p>
 <p id="rfc.section.4.p.6">Some fields are expected to be displayed in the OAuth consent UI and are designated accordingly.</p>
-<p><samp>intermediary_name</samp></p>
+<p><samp>name</samp></p>
 <p id="rfc.section.4.p.8">REQUIRED. A human-readable name of intermediary party. Authorization servers MUST display this field to the end user on the OAuth consent screen.</p>
 <p><samp>description</samp></p>
 <p id="rfc.section.4.p.10">OPTIONAL. A human-readable description of the intermediary. This is not intended to be displayed in the OAuth consent screen.</p>
-<p><samp>intermediaty_uri</samp></p>
+<p><samp>uri</samp></p>
 <p id="rfc.section.4.p.12">A URL string of a web page providing information about the intermediary. If present, the authorization server SHOULD display this URL to the end user in a clickable fashion. It is RECOMMENDED that clients always send this field. The value of this field MUST point to a valid web page.</p>
 <p><samp>logo_uri</samp></p>
 <p id="rfc.section.4.p.14">A URL string that references a logo for this intermediary. If present, the authorization server SHOULD display this image to the end user in the OAuth consent screen. The value of this field MUST be a valid image file.</p>
@@ -501,7 +501,7 @@
 </h1>
 <p id="rfc.section.5.1.p.1">This specification extends the client registration request defined in <a href="#RFC7591" class="xref">[RFC7591]</a>.</p>
 <p id="rfc.section.5.1.p.2">This operation registers a combination of client and one or more intermediaries with an authorization server. The authorization server assigns a unique client identifier (and optionally a client secret) that represents the combination of all the entities described in the registration request.</p>
-<p id="rfc.section.5.1.p.3">To register, the client or developer sends an HTTP POST as described in Section 3.1 of <a href="#RFC7591" class="xref">[RFC7591]</a>, with an additional property named "intermediaries" with a JSON array of objects of each intermediary's registration information.</p>
+<p id="rfc.section.5.1.p.3">To register, the client or developer sends an HTTP POST as described in Section 3.1 of <a href="#RFC7591" class="xref">[RFC7591]</a>, with an additional property named "intermediaries" with a JSON array of objects of each intermediary's registration information. The properties of the object are described above in <a href="#metadata-fields" class="xref">Section 4</a>.</p>
 <p id="rfc.section.5.1.p.4">For example, the client could send the following registration request to the client registration endpoint using its OAuth 2.0 access token it has previously obtained using the client credentials grant.</p>
 <p id="rfc.section.5.1.p.5">The following is a non-normative example request:</p>
 <pre>

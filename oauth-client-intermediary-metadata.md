@@ -1,6 +1,6 @@
 ---
 title: OAuth 2.0 Client Intermediary Metadata
-docname: draft-parecki-oauth-client-intermediary-metadata-02
+docname: draft-parecki-oauth-client-intermediary-metadata-03
 date: 2021-02-22
 
 ipr: trust200902
@@ -53,7 +53,12 @@ that will have access to their data after authorizing the client.
 The existing Dynamic Client Registration ({{RFC7591}}) specification lacks a mechanism
 for communicating a list of additional parties that may have access to the user's data.
 
-This specification extends {{RFC7591}} and {{RFC7592}} to define a mechanism for including information about the additional parties involved in an OAuth transaction by including information about the additional intermediaries into the Dynamic Client Registration request. This specification also defines requirements of the OAuth authorization server to present this information about the additional parties in the OAuth consent screen during an OAuth transaction.
+This specification extends {{RFC7591}} and {{RFC7592}} to define a mechanism for including
+information about the additional parties involved in an OAuth transaction by including
+information about the additional intermediaries into the Dynamic Client Registration
+request. This specification also defines requirements of the OAuth authorization server
+to present this information about the additional parties in the OAuth consent screen
+during an OAuth transaction.
 
 
 Notational Conventions
@@ -88,7 +93,7 @@ the following terms:
   providing the Client and the organization providing the Resource Server.
 
 
-Client Intermediary Metadata
+Client Intermediary Metadata {#metadata-fields}
 ============================
 
 Registered client intermediaries have a set of metadata values
@@ -111,7 +116,7 @@ are defined in terms of their JSON ({{RFC7159}}) representations.
 
 Some fields are expected to be displayed in the OAuth consent UI and are designated accordingly.
 
-`intermediary_name`
+`name`
 
 REQUIRED. A human-readable name of intermediary party. Authorization servers MUST display this field to the end user on the OAuth consent screen.
 
@@ -119,7 +124,7 @@ REQUIRED. A human-readable name of intermediary party. Authorization servers MUS
 
 OPTIONAL. A human-readable description of the intermediary. This is not intended to be displayed in the OAuth consent screen.
 
-`intermediaty_uri`
+`uri`
 
 A URL string of a web page providing information about the intermediary. If present, the authorization server SHOULD display this URL to the end user in a clickable fashion. It is RECOMMENDED that clients always send this field. The value of this field MUST point to a valid web page.
 
@@ -147,7 +152,8 @@ This specification extends the client registration request defined in {{RFC7591}
 
 This operation registers a combination of client and one or more intermediaries with an authorization server. The authorization server assigns a unique client identifier (and optionally a client secret) that represents the combination of all the entities described in the registration request.
 
-To register, the client or developer sends an HTTP POST as described in Section 3.1 of {{RFC7591}}, with an additional property named "intermediaries" with a JSON array of objects of each intermediary's registration information.
+To register, the client or developer sends an HTTP POST as described in Section 3.1 of {{RFC7591}}, with an additional property named "intermediaries" with a JSON array of objects of each intermediary's registration information. The properties
+of the object are described above in {{metadata-fields}}.
 
 For example, the client could send the following registration request to the client registration endpoint using its OAuth 2.0 access token it has previously obtained using the client credentials grant.
 

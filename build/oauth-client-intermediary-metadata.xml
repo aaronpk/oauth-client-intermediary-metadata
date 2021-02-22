@@ -14,7 +14,7 @@
 <?rfc sortrefs="yes"?>
 <?rfc symrefs="yes"?>
 
-<rfc ipr="trust200902" docName="draft-parecki-oauth-client-intermediary-metadata-02" category="std">
+<rfc ipr="trust200902" docName="draft-parecki-oauth-client-intermediary-metadata-03" category="std">
 
   <front>
     <title>OAuth 2.0 Client Intermediary Metadata</title>
@@ -66,7 +66,12 @@ that will have access to their data after authorizing the client.</t>
 <t>The existing Dynamic Client Registration (<xref target="RFC7591"/>) specification lacks a mechanism
 for communicating a list of additional parties that may have access to the user's data.</t>
 
-<t>This specification extends <xref target="RFC7591"/> and <xref target="RFC7592"/> to define a mechanism for including information about the additional parties involved in an OAuth transaction by including information about the additional intermediaries into the Dynamic Client Registration request. This specification also defines requirements of the OAuth authorization server to present this information about the additional parties in the OAuth consent screen during an OAuth transaction.</t>
+<t>This specification extends <xref target="RFC7591"/> and <xref target="RFC7592"/> to define a mechanism for including
+information about the additional parties involved in an OAuth transaction by including
+information about the additional intermediaries into the Dynamic Client Registration
+request. This specification also defines requirements of the OAuth authorization server
+to present this information about the additional parties in the OAuth consent screen
+during an OAuth transaction.</t>
 
 </section>
 <section anchor="notational-conventions" title="Notational Conventions">
@@ -99,7 +104,7 @@ providing the Client and the organization providing the Resource Server.</t>
 </list></t>
 
 </section>
-<section anchor="client-intermediary-metadata" title="Client Intermediary Metadata">
+<section anchor="metadata-fields" title="Client Intermediary Metadata">
 
 <t>Registered client intermediaries have a set of metadata values
 associated with the client identifier of the client that represents them in the OAuth transaction,
@@ -123,7 +128,7 @@ are defined in terms of their JSON (<xref target="RFC7159"/>) representations.</
 
 <t>Some fields are expected to be displayed in the OAuth consent UI and are designated accordingly.</t>
 
-<t><spanx style="verb">intermediary_name</spanx></t>
+<t><spanx style="verb">name</spanx></t>
 
 <t>REQUIRED. A human-readable name of intermediary party. Authorization servers MUST display this field to the end user on the OAuth consent screen.</t>
 
@@ -131,7 +136,7 @@ are defined in terms of their JSON (<xref target="RFC7159"/>) representations.</
 
 <t>OPTIONAL. A human-readable description of the intermediary. This is not intended to be displayed in the OAuth consent screen.</t>
 
-<t><spanx style="verb">intermediaty_uri</spanx></t>
+<t><spanx style="verb">uri</spanx></t>
 
 <t>A URL string of a web page providing information about the intermediary. If present, the authorization server SHOULD display this URL to the end user in a clickable fashion. It is RECOMMENDED that clients always send this field. The value of this field MUST point to a valid web page.</t>
 
@@ -156,7 +161,8 @@ are defined in terms of their JSON (<xref target="RFC7159"/>) representations.</
 
 <t>This operation registers a combination of client and one or more intermediaries with an authorization server. The authorization server assigns a unique client identifier (and optionally a client secret) that represents the combination of all the entities described in the registration request.</t>
 
-<t>To register, the client or developer sends an HTTP POST as described in Section 3.1 of <xref target="RFC7591"/>, with an additional property named "intermediaries" with a JSON array of objects of each intermediary's registration information.</t>
+<t>To register, the client or developer sends an HTTP POST as described in Section 3.1 of <xref target="RFC7591"/>, with an additional property named "intermediaries" with a JSON array of objects of each intermediary's registration information. The properties
+of the object are described above in <xref target="metadata-fields"/>.</t>
 
 <t>For example, the client could send the following registration request to the client registration endpoint using its OAuth 2.0 access token it has previously obtained using the client credentials grant.</t>
 
@@ -306,97 +312,98 @@ are defined in terms of their JSON (<xref target="RFC7159"/>) representations.</
   </back>
 
 <!-- ##markdown-source:
-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
-vwF2qoS4lTEAAA==
+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
+AA==
 
 -->
 
