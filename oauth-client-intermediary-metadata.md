@@ -31,7 +31,7 @@ normative:
 
 --- abstract
 
-This specification defines a mechanism for including information about 
+This specification defines a mechanism for including information about
 additional parties involved in an OAuth transaction by adding a new section
 to the OAuth 2.0 Dynamic Client Registration request, as well as requires that
 authorization servers surface this information to users during an OAuth transaction.
@@ -42,16 +42,16 @@ Introduction {#introduction}
 ============
 
 In some applications of OAuth, an OAuth client is acting on behalf of one or more
-intermediary or user-facing applications, and is not the entity that the user has 
-an established relationship with. 
+intermediary or user-facing applications, and is not the entity that the user has
+an established relationship with.
 
-In the traditional OAuth model, a `client_id` 
-represents only one application, and so the OAuth consent screen lists just one third party: 
-the OAuth client. In these cases, it is not appropriate to list only the actual 
-OAuth client or only the user-facing application. Listing only the actual OAuth client 
-would be confusing to the user, since the user does not have a relationship with this entity. 
-Listing only the user-facing application would be inaccurate and misrepresent the 
-situation, since the user would be unaware that their data is actually being handled 
+In the traditional OAuth model, a `client_id`
+represents only one application, and so the OAuth consent screen lists just one third party:
+the OAuth client. In these cases, it is not appropriate to list only the actual
+OAuth client or only the user-facing application. Listing only the actual OAuth client
+would be confusing to the user, since the user does not have a relationship with this entity.
+Listing only the user-facing application would be inaccurate and misrepresent the
+situation, since the user would be unaware that their data is actually being handled
 by additional parties.
 
 This specification extends {{RFC7591}} and {{RFC7592}} to define a mechanism for including information about the additional parties involved in an OAuth transaction by including information about the additional intermediaries as well as the user-facing application into the Dynamic Client Registration request. This specification also defines requirements of the OAuth authorization server to present this information about the additional parties in the OAuth consent screen during an OAuth transaction.
@@ -64,7 +64,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
 "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
 "OPTIONAL" in this document are to be interpreted as described in {{RFC2119}}.
 
-Unless otherwise noted, all the protocol parameter names and values 
+Unless otherwise noted, all the protocol parameter names and values
 are case sensitive.
 
 
@@ -78,29 +78,29 @@ the following terms:
 : In this document, "OAuth" refers to OAuth 2.0, {{RFC6749}}.
 
 "End User Application (EUA)":
-: The software that the end user interacts with and has a relationship with, 
+: The software that the end user interacts with and has a relationship with,
   which is not the same as the OAuth client interacting with the Resource Server.
 
 "Intermediary":
 : One or more entities that the user's data will pass through or be shared with by
-  using the OAuth client. This information is voluntarily provided by the OAuth 
+  using the OAuth client. This information is voluntarily provided by the OAuth
   client, and is typically enforced by a business relationship between the organization
   providing the Client and the organization providing the Resource Server.
 
-"Client": 
-: "Client" has the same definition as in OAuth 2.0, but is worth pointing out explicitly 
-  here that the client in this case is requesting and obtaining permission from the user 
+"Client":
+: "Client" has the same definition as in OAuth 2.0, but is worth pointing out explicitly
+  here that the client in this case is requesting and obtaining permission from the user
   to access their resources while acting on behalf of the End User Application.
 
 
 End User Application and Intermediary Metadata
 ==============================================
 
-Registered end user applications, as well as intermediaries, have a set of metadata values 
-associated with the client identifier of the client that represents them in the OAuth transaction, 
+Registered end user applications, as well as intermediaries, have a set of metadata values
+associated with the client identifier of the client that represents them in the OAuth transaction,
 such as a user-visible name, logo, and URL.
 
-Like the OAuth client metadata defined in {{RFC7591}} and {{RFC7592}}, these metadata 
+Like the OAuth client metadata defined in {{RFC7591}} and {{RFC7592}}, these metadata
 values are used in the following ways:
 
 * as input values to registration and update requests, and
@@ -172,7 +172,7 @@ The following is a non-normative example request:
           "logo_uri": "https://client.example.org/logo.png",
           "end_user_application": {
             "name": "User-Recognizable App Name",
-            "description": "This application is what the user 
+            "description": "This application is what the user
               is interacting with in their browser",
             "uri": "https://example.net/",
             "logo_uri": "https://example.net/logo.png",
@@ -183,7 +183,7 @@ The following is a non-normative example request:
           "intermediaries": [
             {
               "name": "Partner App Name",
-              "description": "An application that may also receive 
+              "description": "An application that may also receive
                 this user's data when the user authorizes the client",
               "uri": "https://partner.example/",
               "logo_uri": "https://partner.example/logo.png",
@@ -224,7 +224,7 @@ The following is a non-normative example response of a successful registration:
           "logo_uri": "https://client.example.org/logo.png",
           "end_user_application": {
             "name": "User-Recognizable App Name",
-            "description": "This application is what the user is interacting 
+            "description": "This application is what the user is interacting
               with in their browser",
             "uri": "https://example.net/",
             "logo_uri": "https://example.net/logo.png",
@@ -235,7 +235,7 @@ The following is a non-normative example response of a successful registration:
           "intermediaries": [
             {
               "name": "Partner App Name",
-              "description": "An application that may also receive 
+              "description": "An application that may also receive
                 this user's data when the user authorizes the client",
               "uri": "https://partner.example/",
               "logo_uri": "https://partner.example/logo.png",
@@ -258,7 +258,7 @@ This specification extends the client read request defined in {{RFC7592}} to inc
 Client Update Request
 ---------------------
 
-This specification extends the client update request defined in {{RFC7592}} to be able to update the additional metadata properties that describe the end user application and intermediaries. 
+This specification extends the client update request defined in {{RFC7592}} to be able to update the additional metadata properties that describe the end user application and intermediaries.
 
 The additional properties are provided in the update request in the same format as in the initial registration request.
 
