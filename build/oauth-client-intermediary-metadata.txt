@@ -9,7 +9,7 @@ Expires: August 26, 2021
 
 
                  OAuth 2.0 Client Intermediary Metadata
-          draft-parecki-oauth-client-intermediary-metadata-03
+          draft-parecki-oauth-client-intermediary-metadata-02
 
 Abstract
 

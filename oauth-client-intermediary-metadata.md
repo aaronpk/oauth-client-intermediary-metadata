@@ -1,6 +1,6 @@
 ---
 title: OAuth 2.0 Client Intermediary Metadata
-docname: draft-parecki-oauth-client-intermediary-metadata-03
+docname: draft-parecki-oauth-client-intermediary-metadata-02
 date: 2021-02-22
 
 ipr: trust200902
