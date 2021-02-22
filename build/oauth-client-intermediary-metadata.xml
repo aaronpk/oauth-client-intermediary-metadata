@@ -14,7 +14,7 @@
 <?rfc sortrefs="yes"?>
 <?rfc symrefs="yes"?>
 
-<rfc ipr="trust200902" docName="draft-parecki-oauth-client-intermediary-metadata-02" category="std">
+<rfc ipr="trust200902" docName="draft-parecki-oauth-client-intermediary-metadata-03" category="std">
 
   <front>
     <title>OAuth 2.0 Client Intermediary Metadata</title>
@@ -27,7 +27,7 @@
       </address>
     </author>
 
-    <date year="2020" month="November" day="06"/>
+    <date year="2021" month="February" day="22"/>
 
     <area>Security Area</area>
     <workgroup>Open Authentication Protocol</workgroup>
@@ -37,7 +37,7 @@
     <abstract>
 
 
-<t>This specification defines a mechanism for including information about 
+<t>This specification defines a mechanism for including information about
 additional parties involved in an OAuth transaction by adding a new section
 to the OAuth 2.0 Dynamic Client Registration request, as well as requires that
 authorization servers surface this information to users during an OAuth transaction.</t>
@@ -54,20 +54,19 @@ authorization servers surface this information to users during an OAuth transact
 
 <section anchor="introduction" title="Introduction">
 
-<t>In some applications of OAuth, an OAuth client is acting on behalf of one or more
-intermediary or user-facing applications, and is not the entity that the user has 
-an established relationship with.</t>
+<t>In some applications of OAuth, there may be multiple legal entities which have access
+to or process data retrieved by an OAuth client. In the traditional OAuth model,
+a <spanx style="verb">client_id</spanx> represents only a single application, and so the OAuth consent screen
+lists just one third party: the OAuth client.</t>
 
-<t>In the traditional OAuth model, a <spanx style="verb">client_id</spanx> 
-represents only one application, and so the OAuth consent screen lists just one third party: 
-the OAuth client. In these cases, it is not appropriate to list only the actual 
-OAuth client or only the user-facing application. Listing only the actual OAuth client 
-would be confusing to the user, since the user does not have a relationship with this entity. 
-Listing only the user-facing application would be inaccurate and misrepresent the 
-situation, since the user would be unaware that their data is actually being handled 
-by additional parties.</t>
+<t>In this situation, in order to comply with various local laws and regulations,
+the user needs to be informed by the authorization server of the list of entities
+that will have access to their data after authorizing the client.</t>
 
-<t>This specification extends <xref target="RFC7591"/> and <xref target="RFC7592"/> to define a mechanism for including information about the additional parties involved in an OAuth transaction by including information about the additional intermediaries as well as the user-facing application into the Dynamic Client Registration request. This specification also defines requirements of the OAuth authorization server to present this information about the additional parties in the OAuth consent screen during an OAuth transaction.</t>
+<t>The existing Dynamic Client Registration (<xref target="RFC7591"/>) specification lacks a mechanism
+for communicating a list of additional parties that may have access to the user's data.</t>
+
+<t>This specification extends <xref target="RFC7591"/> and <xref target="RFC7592"/> to define a mechanism for including information about the additional parties involved in an OAuth transaction by including information about the additional intermediaries into the Dynamic Client Registration request. This specification also defines requirements of the OAuth authorization server to present this information about the additional parties in the OAuth consent screen during an OAuth transaction.</t>
 
 </section>
 <section anchor="notational-conventions" title="Notational Conventions">
@@ -76,7 +75,7 @@ by additional parties.</t>
 "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
 "OPTIONAL" in this document are to be interpreted as described in <xref target="RFC2119"/>.</t>
 
-<t>Unless otherwise noted, all the protocol parameter names and values 
+<t>Unless otherwise noted, all the protocol parameter names and values
 are case sensitive.</t>
 
 </section>
@@ -88,28 +87,25 @@ the following terms:</t>
 <t><list style="hanging">
   <t hangText='&quot;OAuth&quot;:'>
   In this document, "OAuth" refers to OAuth 2.0, <xref target="RFC6749"/>.</t>
-  <t hangText='&quot;End User Application (EUA)&quot;:'>
-  The software that the end user interacts with and has a relationship with, 
-which is not the same as the OAuth client interacting with the Resource Server.</t>
+  <t hangText='&quot;Client&quot;:'>
+  "Client" has the same definition as in OAuth 2.0, but is worth pointing out
+that the client in this context may be operated by a different legal entity than is
+described by the client name.</t>
   <t hangText='&quot;Intermediary&quot;:'>
   One or more entities that the user's data will pass through or be shared with by
-using the OAuth client. This information is voluntarily provided by the OAuth 
+using the OAuth client. This information is voluntarily provided by the OAuth
 client, and is typically enforced by a business relationship between the organization
 providing the Client and the organization providing the Resource Server.</t>
-  <t hangText='&quot;Client&quot;:'>
-  "Client" has the same definition as in OAuth 2.0, but is worth pointing out explicitly 
-here that the client in this case is requesting and obtaining permission from the user 
-to access their resources while acting on behalf of the End User Application.</t>
 </list></t>
 
 </section>
-<section anchor="end-user-application-and-intermediary-metadata" title="End User Application and Intermediary Metadata">
+<section anchor="client-intermediary-metadata" title="Client Intermediary Metadata">
 
-<t>Registered end user applications, as well as intermediaries, have a set of metadata values 
-associated with the client identifier of the client that represents them in the OAuth transaction, 
+<t>Registered client intermediaries have a set of metadata values
+associated with the client identifier of the client that represents them in the OAuth transaction,
 such as a user-visible name, logo, and URL.</t>
 
-<t>Like the OAuth client metadata defined in <xref target="RFC7591"/> and <xref target="RFC7592"/>, these metadata 
+<t>Like the OAuth client metadata defined in <xref target="RFC7591"/> and <xref target="RFC7592"/>, these metadata
 values are used in the following ways:</t>
 
 <t><list style="symbols">
@@ -127,40 +123,40 @@ are defined in terms of their JSON (<xref target="RFC7159"/>) representations.</
 
 <t>Some fields are expected to be displayed in the OAuth consent UI and are designated accordingly.</t>
 
-<t><spanx style="verb">name</spanx></t>
+<t><spanx style="verb">intermediary_name</spanx></t>
 
-<t>REQUIRED. A human-readable name of the end user application or intermediary. Authorization servers MUST display this field to the end user on the OAuth consent screen.</t>
+<t>REQUIRED. A human-readable name of intermediary party. Authorization servers MUST display this field to the end user on the OAuth consent screen.</t>
 
 <t><spanx style="verb">description</spanx></t>
 
-<t>REQUIRED. A human-readable description of the end user application or intermediary. This is not intended to be displayed in the OAuth consent screen.</t>
+<t>OPTIONAL. A human-readable description of the intermediary. This is not intended to be displayed in the OAuth consent screen.</t>
 
-<t><spanx style="verb">uri</spanx></t>
+<t><spanx style="verb">intermediaty_uri</spanx></t>
 
-<t>A URL string of a web page providing information about the end user application or intermediary. If present, the authorization server SHOULD display this URL to the end user in a clickable fashion. It is RECOMMENDED that clients always send this field. The value of this field MUST point to a valid web page.</t>
+<t>A URL string of a web page providing information about the intermediary. If present, the authorization server SHOULD display this URL to the end user in a clickable fashion. It is RECOMMENDED that clients always send this field. The value of this field MUST point to a valid web page.</t>
 
 <t><spanx style="verb">logo_uri</spanx></t>
 
-<t>A URL string that references a logo for this end user application or intermediary. If present, the authorization server SHOULD display this image to the end user in the OAuth consent screen. The value of this field MUST be a valid image file.</t>
+<t>A URL string that references a logo for this intermediary. If present, the authorization server SHOULD display this image to the end user in the OAuth consent screen. The value of this field MUST be a valid image file.</t>
 
 <t><spanx style="verb">contacts</spanx></t>
 
-<t>Array of strings representing ways to contact people responsible for this end user application or intermediary, typically email addresses or phone numbers. The authorization server MAY display these to the end user in the OAuth consent screen. See Section 6 of <xref target="RFC7591"/> for information on Privacy Considerations.</t>
+<t>Array of strings representing ways to contact people responsible for this intermediary, typically email addresses or phone numbers. The authorization server MAY display these to the end user in the OAuth consent screen. See Section 6 of <xref target="RFC7591"/> for information on Privacy Considerations.</t>
 
 </section>
 <section anchor="client-registration-endpoint" title="Client Registration Endpoint">
 
 <t>The client registration endpoint is described in Section 3 of <xref target="RFC7591"/>.</t>
 
-<t>Since this specification provides a mechanism for a client to assert user information about additional parties other than itself, the registration endpoint MUST be protected by an OAuth 2.0 access token obtained by the client. The method by which the initial access token is obtained by the client or developer is out of scope of this specification, but is likely to be obtained using the client credentials grant.</t>
+<t>Since this specification provides a mechanism for a client to assert information about additional parties other than itself, the registration endpoint MUST be protected by an OAuth 2.0 access token obtained by the client. The method by which the initial access token is obtained by the client or developer is out of scope of this specification, but is likely to be obtained using the client credentials grant or manual out-of-band registration.</t>
 
 <section anchor="client-registration-request" title="Client Registration Request">
 
 <t>This specification extends the client registration request defined in <xref target="RFC7591"/>.</t>
 
-<t>This operation registers a combination of client, end user application, and optionally one or more intermediaries with an authorization server. The authorization server assigns a unique client identifier (and optionally a client secret) that represents the combination of all the entities described in the registration request.</t>
+<t>This operation registers a combination of client and one or more intermediaries with an authorization server. The authorization server assigns a unique client identifier (and optionally a client secret) that represents the combination of all the entities described in the registration request.</t>
 
-<t>To register, the client or developer sends an HTTP POST as described in Section 3.1 of <xref target="RFC7591"/>, with an additional property named "end_user_application" containing a JSON object with the end user application registration information, and optionally a property named "intermediaries" with a JSON array of objects of each intermediary's registration information.</t>
+<t>To register, the client or developer sends an HTTP POST as described in Section 3.1 of <xref target="RFC7591"/>, with an additional property named "intermediaries" with a JSON array of objects of each intermediary's registration information.</t>
 
 <t>For example, the client could send the following registration request to the client registration endpoint using its OAuth 2.0 access token it has previously obtained using the client credentials grant.</t>
 
@@ -174,25 +170,19 @@ are defined in terms of their JSON (<xref target="RFC7159"/>) representations.</
     Authorization: Bearer 8IGFGXKXZBV5LL38Y3X1
 
     {
-      "client_name": "My Example Client",
+      "client_name": "User-Recognizable App Name",
       "redirect_uris": [
         "https://client.example.org/callback"
       ],
-      "logo_uri": "https://client.example.org/logo.png",
-      "end_user_application": {
-        "name": "User-Recognizable App Name",
-        "description": "This application is what the user 
-          is interacting with in their browser",
-        "uri": "https://example.net/",
-        "logo_uri": "https://example.net/logo.png",
-        "contacts": [
-          "support@example.net"
-        ]
-      },
+      "client_uri": "https://example.net/",
+      "logo_uri": "https://example.net/logo.png",
+      "contacts": [
+        "support@example.net"
+      ],
       "intermediaries": [
         {
           "name": "Partner App Name",
-          "description": "An application that may also receive 
+          "description": "An application that may also receive
             this user's data when the user authorizes the client",
           "uri": "https://partner.example/",
           "logo_uri": "https://partner.example/logo.png",
@@ -209,9 +199,9 @@ are defined in terms of their JSON (<xref target="RFC7159"/>) representations.</
 
 <t>This specification extends the client information response defined in <xref target="RFC7591"/> and <xref target="RFC7592"/>.</t>
 
-<t>Upon a successful registration request, the authorization server returns a client identifier for the combination of the client, end user application, and any intermediaries specified in the request.</t>
+<t>Upon a successful registration request, the authorization server returns a client identifier for the combination of the client and any intermediaries specified in the request.</t>
 
-<t>In addition to the response fields defined in Section 3.2 of <xref target="RFC7591"/> and Section 3 of <xref target="RFC7592"/>, the response MUST also contain all registered metadata about the end user application and any intermediaries. The authorization server MAY reject or replace any of the requested metadata values submitted during the registration and substitute them with suitable values.</t>
+<t>In addition to the response fields defined in Section 3.2 of <xref target="RFC7591"/> and Section 3 of <xref target="RFC7592"/>, the response MUST also contain all registered metadata about the intermediaries. The authorization server MAY reject or replace any of the requested metadata values submitted during the registration and substitute them with suitable values.</t>
 
 <t>The following is a non-normative example response of a successful registration:</t>
 
@@ -228,25 +218,18 @@ are defined in terms of their JSON (<xref target="RFC7159"/>) representations.</
       "token_endpoint_auth_method": "client_secret_basic",
       "registration_client_uri": "https://server.example.com/client/tmzaAMkyWlH3",
       "registration_access_token": "MphaAqDaZT86C93ENWRZcf3dfU2dW6POASo8dFXa",
-      "client_name": "My Example Client",
+      "client_name": "User-Recognizable App Name",
+      "client_uri": "https://example.net/",
       "redirect_uris": [
         "https://client.example.org/callback"
       ],
-      "logo_uri": "https://client.example.org/logo.png",
-      "end_user_application": {
-        "name": "User-Recognizable App Name",
-        "description": "This application is what the user is interacting 
-          with in their browser",
-        "uri": "https://example.net/",
-        "logo_uri": "https://example.net/logo.png",
-        "contacts": [
-          "support@example.net"
-        ]
-      },
+      "contacts": [
+        "support@example.net"
+      ],
       "intermediaries": [
         {
           "name": "Partner App Name",
-          "description": "An application that may also receive 
+          "description": "An application that may also receive
             this user's data when the user authorizes the client",
           "uri": "https://partner.example/",
           "logo_uri": "https://partner.example/logo.png",
@@ -263,12 +246,12 @@ are defined in terms of their JSON (<xref target="RFC7159"/>) representations.</
 </section>
 <section anchor="client-read-request" title="Client Read Request">
 
-<t>This specification extends the client read request defined in <xref target="RFC7592"/> to include the additional metadata properties in the response that describe the end user application and intermediaries. No additional behavior is prescribed by this specification.</t>
+<t>This specification extends the client read request defined in <xref target="RFC7592"/> to include the additional metadata properties in the response that describe the intermediaries. No additional behavior is prescribed by this specification.</t>
 
 </section>
 <section anchor="client-update-request" title="Client Update Request">
 
-<t>This specification extends the client update request defined in <xref target="RFC7592"/> to be able to update the additional metadata properties that describe the end user application and intermediaries.</t>
+<t>This specification extends the client update request defined in <xref target="RFC7592"/> to be able to update the additional metadata properties that describe the intermediaries.</t>
 
 <t>The additional properties are provided in the update request in the same format as in the initial registration request.</t>
 
@@ -281,15 +264,11 @@ are defined in terms of their JSON (<xref target="RFC7159"/>) representations.</
 
 </section>
 </section>
-<section anchor="providing-end-user-application-details-in-the-authorization-request" title="Providing End-User Application Details in the Authorization Request">
+<section anchor="providing-intermediaty-details-in-the-authorization-request" title="Providing Intermediaty Details in the Authorization Request">
 
-<t>When the authorization server begins a request from an OAuth client identifier that has been registered with additional end user application or intermediary information, it MUST display the additional parties in the consent UI visible to the end user.</t>
+<t>When the authorization server begins a request from an OAuth client identifier that has been registered with additional intermediary information, it MUST display the additional parties in the consent UI visible to the end user.</t>
 
-<t>The authorization server MAY choose to emphasize or make the end user application information the primary information displayed in the consent screen. This is because the end user application is likely the most recognizable entity to the end user, and the end user may not be aware that it is actually a different organization's OAuth client that is the one making requests for the user's data.</t>
-
-<t>The authorization server chooses how best to display the additional information, but it MUST include at least the name of the end user application, intermediaries, and client, and SHOULD include the logo of each as well.</t>
-
-<t>Once an access token has been issued to this client, the client uses the access token to make requests at the resource server on behalf of the specific end user application on behalf of the end user.</t>
+<t>The authorization server chooses how best to display the additional information, but it MUST include at least the name of the intermediaries and client, and SHOULD include the logo of each as well.</t>
 
 </section>
 <section anchor="security-considerations" title="Security Considerations">
@@ -301,7 +280,7 @@ are defined in terms of their JSON (<xref target="RFC7159"/>) representations.</
 </section>
 <section anchor="acknowledgements" title="Acknowledgements">
 
-<t>The authors would like to thank Ryan Christiansen and Preston McFarland for their initial contributions of the concepts behind this specification. The authors would also like to thank Don Cardinal, Ryan Christiansen and Preston McFarland for their reviews of this specification. Additionally the work of the OAuth Working Group on the referenced and related specifications that this specification builds upon is much appreciated.</t>
+<t>The author would like to thank Ryan Christiansen and Preston McFarland for their initial contributions of the concepts behind this specification. The author would also like to thank Don Cardinal, Ryan Christiansen and Preston McFarland for their reviews of this specification, as well as Anil Mahalaha and other members of the Financial Data Exchange working group. Additionally the work of the OAuth Working Group on the referenced and related specifications that this specification builds upon is much appreciated.</t>
 
 </section>
 
@@ -327,105 +306,97 @@ are defined in terms of their JSON (<xref target="RFC7159"/>) representations.</
   </back>
 
 <!-- ##markdown-source:
-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
-Kf5WbJZWs1n0b2xnI+VBOQAA
+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
+mc2SfwMOlUcjlTEAAA==
 
 -->
 

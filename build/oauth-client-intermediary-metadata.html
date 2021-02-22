@@ -377,26 +377,26 @@
 <link href="#rfc.section.1" rel="Chapter" title="1 Introduction">
 <link href="#rfc.section.2" rel="Chapter" title="2 Notational Conventions">
 <link href="#rfc.section.3" rel="Chapter" title="3 Terminology">
-<link href="#rfc.section.4" rel="Chapter" title="4 End User Application and Intermediary Metadata">
+<link href="#rfc.section.4" rel="Chapter" title="4 Client Intermediary Metadata">
 <link href="#rfc.section.5" rel="Chapter" title="5 Client Registration Endpoint">
 <link href="#rfc.section.5.1" rel="Chapter" title="5.1 Client Registration Request">
 <link href="#rfc.section.5.2" rel="Chapter" title="5.2 Client Registration Response">
 <link href="#rfc.section.5.3" rel="Chapter" title="5.3 Client Read Request">
 <link href="#rfc.section.5.4" rel="Chapter" title="5.4 Client Update Request">
 <link href="#rfc.section.5.5" rel="Chapter" title="5.5 Client Delete Request">
-<link href="#rfc.section.6" rel="Chapter" title="6 Providing End-User Application Details in the Authorization Request">
+<link href="#rfc.section.6" rel="Chapter" title="6 Providing Intermediaty Details in the Authorization Request">
 <link href="#rfc.section.7" rel="Chapter" title="7 Security Considerations">
 <link href="#rfc.section.8" rel="Chapter" title="8 Acknowledgements">
 <link href="#rfc.references" rel="Chapter" title="9 Normative References">
 <link href="#rfc.authors" rel="Chapter">
 
 
-  <meta name="generator" content="xml2rfc version 3.3.0 - https://tools.ietf.org/tools/xml2rfc" />
+  <meta name="generator" content="xml2rfc version 3.5.0 - https://tools.ietf.org/tools/xml2rfc" />
   <link rel="schema.dct" href="http://purl.org/dc/terms/" />
 
   <meta name="dct.creator" content="Parecki, A." />
-  <meta name="dct.identifier" content="urn:ietf:id:draft-parecki-oauth-client-intermediary-metadata-02" />
-  <meta name="dct.issued" scheme="ISO8601" content="2020-11-06" />
+  <meta name="dct.identifier" content="urn:ietf:id:draft-parecki-oauth-client-intermediary-metadata-03" />
+  <meta name="dct.issued" scheme="ISO8601" content="2021-02-22" />
   <meta name="dct.abstract" content="This specification defines a mechanism for including information about additional parties involved in an OAuth transaction by adding a new section to the OAuth 2.0 Dynamic Client Registration request, as well as requires that authorization servers surface this information to users during an OAuth transaction. " />
   <meta name="description" content="This specification defines a mechanism for including information about additional parties involved in an OAuth transaction by adding a new section to the OAuth 2.0 Dynamic Client Registration request, as well as requires that authorization servers surface this information to users during an OAuth transaction. " />
 
@@ -417,10 +417,10 @@
 </tr>
 <tr>
 <td class="left">Intended status: Standards Track</td>
-<td class="right">November 06, 2020</td>
+<td class="right">February 22, 2021</td>
 </tr>
 <tr>
-<td class="left">Expires: May 10, 2021</td>
+<td class="left">Expires: August 26, 2021</td>
 <td class="right"></td>
 </tr>
 
@@ -429,7 +429,7 @@
   </table>
 
   <p class="title">OAuth 2.0 Client Intermediary Metadata<br />
-  <span class="filename">draft-parecki-oauth-client-intermediary-metadata-02</span></p>
+  <span class="filename">draft-parecki-oauth-client-intermediary-metadata-03</span></p>
   
   <h1 id="rfc.abstract"><a href="#rfc.abstract">Abstract</a></h1>
 <p>This specification defines a mechanism for including information about additional parties involved in an OAuth transaction by adding a new section to the OAuth 2.0 Dynamic Client Registration request, as well as requires that authorization servers surface this information to users during an OAuth transaction.</p>
@@ -437,16 +437,17 @@
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at https://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on May 10, 2021.</p>
+<p>This Internet-Draft will expire on August 26, 2021.</p>
 <h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
-<p>Copyright (c) 2020 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
+<p>Copyright (c) 2021 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
 <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (https://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
 <h1 id="rfc.section.1">
 <a href="#rfc.section.1">1.</a> <a href="#introduction" id="introduction">Introduction</a>
 </h1>
-<p id="rfc.section.1.p.1">In some applications of OAuth, an OAuth client is acting on behalf of one or more intermediary or user-facing applications, and is not the entity that the user has an established relationship with.</p>
-<p id="rfc.section.1.p.2">In the traditional OAuth model, a <samp>client_id</samp> represents only one application, and so the OAuth consent screen lists just one third party: the OAuth client. In these cases, it is not appropriate to list only the actual OAuth client or only the user-facing application. Listing only the actual OAuth client would be confusing to the user, since the user does not have a relationship with this entity.  Listing only the user-facing application would be inaccurate and misrepresent the situation, since the user would be unaware that their data is actually being handled by additional parties.</p>
-<p id="rfc.section.1.p.3">This specification extends <a href="#RFC7591" class="xref">[RFC7591]</a> and <a href="#RFC7592" class="xref">[RFC7592]</a> to define a mechanism for including information about the additional parties involved in an OAuth transaction by including information about the additional intermediaries as well as the user-facing application into the Dynamic Client Registration request. This specification also defines requirements of the OAuth authorization server to present this information about the additional parties in the OAuth consent screen during an OAuth transaction.</p>
+<p id="rfc.section.1.p.1">In some applications of OAuth, there may be multiple legal entities which have access to or process data retrieved by an OAuth client. In the traditional OAuth model, a <samp>client_id</samp> represents only a single application, and so the OAuth consent screen lists just one third party: the OAuth client.</p>
+<p id="rfc.section.1.p.2">In this situation, in order to comply with various local laws and regulations, the user needs to be informed by the authorization server of the list of entities that will have access to their data after authorizing the client.</p>
+<p id="rfc.section.1.p.3">The existing Dynamic Client Registration (<a href="#RFC7591" class="xref">[RFC7591]</a>) specification lacks a mechanism for communicating a list of additional parties that may have access to the user's data.</p>
+<p id="rfc.section.1.p.4">This specification extends <a href="#RFC7591" class="xref">[RFC7591]</a> and <a href="#RFC7592" class="xref">[RFC7592]</a> to define a mechanism for including information about the additional parties involved in an OAuth transaction by including information about the additional intermediaries into the Dynamic Client Registration request. This specification also defines requirements of the OAuth authorization server to present this information about the additional parties in the OAuth consent screen during an OAuth transaction.</p>
 <h1 id="rfc.section.2">
 <a href="#rfc.section.2">2.</a> <a href="#notational-conventions" id="notational-conventions">Notational Conventions</a>
 </h1>
@@ -461,17 +462,15 @@
 <dl>
 <dt>"OAuth":</dt>
 <dd style="margin-left: 8">In this document, "OAuth" refers to OAuth 2.0, <a href="#RFC6749" class="xref">[RFC6749]</a>.</dd>
-<dt>"End User Application (EUA)":</dt>
-<dd style="margin-left: 8">The software that the end user interacts with and has a relationship with, which is not the same as the OAuth client interacting with the Resource Server.</dd>
+<dt>"Client":</dt>
+<dd style="margin-left: 8">"Client" has the same definition as in OAuth 2.0, but is worth pointing out that the client in this context may be operated by a different legal entity than is described by the client name.</dd>
 <dt>"Intermediary":</dt>
 <dd style="margin-left: 8">One or more entities that the user's data will pass through or be shared with by using the OAuth client. This information is voluntarily provided by the OAuth client, and is typically enforced by a business relationship between the organization providing the Client and the organization providing the Resource Server.</dd>
-<dt>"Client":</dt>
-<dd style="margin-left: 8">"Client" has the same definition as in OAuth 2.0, but is worth pointing out explicitly here that the client in this case is requesting and obtaining permission from the user to access their resources while acting on behalf of the End User Application.</dd>
 </dl>
 <h1 id="rfc.section.4">
-<a href="#rfc.section.4">4.</a> <a href="#end-user-application-and-intermediary-metadata" id="end-user-application-and-intermediary-metadata">End User Application and Intermediary Metadata</a>
+<a href="#rfc.section.4">4.</a> <a href="#client-intermediary-metadata" id="client-intermediary-metadata">Client Intermediary Metadata</a>
 </h1>
-<p id="rfc.section.4.p.1">Registered end user applications, as well as intermediaries, have a set of metadata values associated with the client identifier of the client that represents them in the OAuth transaction, such as a user-visible name, logo, and URL.</p>
+<p id="rfc.section.4.p.1">Registered client intermediaries have a set of metadata values associated with the client identifier of the client that represents them in the OAuth transaction, such as a user-visible name, logo, and URL.</p>
 <p id="rfc.section.4.p.2">Like the OAuth client metadata defined in <a href="#RFC7591" class="xref">[RFC7591]</a> and <a href="#RFC7592" class="xref">[RFC7592]</a>, these metadata values are used in the following ways:</p>
 <p></p>
 
@@ -482,27 +481,27 @@
 <p id="rfc.section.4.p.4">These values are used by the authorization server when displaying the OAuth consent screen to the end user, to inform them of all the additional parties that will be handling the user's data upon approval.</p>
 <p id="rfc.section.4.p.5">The following metadata fields are defined by this specification. The implementation and use of the fields is OPTIONAL unless stated otherwise. All data member types (strings, arrays, numbers) are defined in terms of their JSON (<a href="#RFC7159" class="xref">[RFC7159]</a>) representations.</p>
 <p id="rfc.section.4.p.6">Some fields are expected to be displayed in the OAuth consent UI and are designated accordingly.</p>
-<p><samp>name</samp></p>
-<p id="rfc.section.4.p.8">REQUIRED. A human-readable name of the end user application or intermediary. Authorization servers MUST display this field to the end user on the OAuth consent screen.</p>
+<p><samp>intermediary_name</samp></p>
+<p id="rfc.section.4.p.8">REQUIRED. A human-readable name of intermediary party. Authorization servers MUST display this field to the end user on the OAuth consent screen.</p>
 <p><samp>description</samp></p>
-<p id="rfc.section.4.p.10">REQUIRED. A human-readable description of the end user application or intermediary. This is not intended to be displayed in the OAuth consent screen.</p>
-<p><samp>uri</samp></p>
-<p id="rfc.section.4.p.12">A URL string of a web page providing information about the end user application or intermediary. If present, the authorization server SHOULD display this URL to the end user in a clickable fashion. It is RECOMMENDED that clients always send this field. The value of this field MUST point to a valid web page.</p>
+<p id="rfc.section.4.p.10">OPTIONAL. A human-readable description of the intermediary. This is not intended to be displayed in the OAuth consent screen.</p>
+<p><samp>intermediaty_uri</samp></p>
+<p id="rfc.section.4.p.12">A URL string of a web page providing information about the intermediary. If present, the authorization server SHOULD display this URL to the end user in a clickable fashion. It is RECOMMENDED that clients always send this field. The value of this field MUST point to a valid web page.</p>
 <p><samp>logo_uri</samp></p>
-<p id="rfc.section.4.p.14">A URL string that references a logo for this end user application or intermediary. If present, the authorization server SHOULD display this image to the end user in the OAuth consent screen. The value of this field MUST be a valid image file.</p>
+<p id="rfc.section.4.p.14">A URL string that references a logo for this intermediary. If present, the authorization server SHOULD display this image to the end user in the OAuth consent screen. The value of this field MUST be a valid image file.</p>
 <p><samp>contacts</samp></p>
-<p id="rfc.section.4.p.16">Array of strings representing ways to contact people responsible for this end user application or intermediary, typically email addresses or phone numbers. The authorization server MAY display these to the end user in the OAuth consent screen. See Section 6 of <a href="#RFC7591" class="xref">[RFC7591]</a> for information on Privacy Considerations.</p>
+<p id="rfc.section.4.p.16">Array of strings representing ways to contact people responsible for this intermediary, typically email addresses or phone numbers. The authorization server MAY display these to the end user in the OAuth consent screen. See Section 6 of <a href="#RFC7591" class="xref">[RFC7591]</a> for information on Privacy Considerations.</p>
 <h1 id="rfc.section.5">
 <a href="#rfc.section.5">5.</a> <a href="#client-registration-endpoint" id="client-registration-endpoint">Client Registration Endpoint</a>
 </h1>
 <p id="rfc.section.5.p.1">The client registration endpoint is described in Section 3 of <a href="#RFC7591" class="xref">[RFC7591]</a>.</p>
-<p id="rfc.section.5.p.2">Since this specification provides a mechanism for a client to assert user information about additional parties other than itself, the registration endpoint MUST be protected by an OAuth 2.0 access token obtained by the client. The method by which the initial access token is obtained by the client or developer is out of scope of this specification, but is likely to be obtained using the client credentials grant.</p>
+<p id="rfc.section.5.p.2">Since this specification provides a mechanism for a client to assert information about additional parties other than itself, the registration endpoint MUST be protected by an OAuth 2.0 access token obtained by the client. The method by which the initial access token is obtained by the client or developer is out of scope of this specification, but is likely to be obtained using the client credentials grant or manual out-of-band registration.</p>
 <h1 id="rfc.section.5.1">
 <a href="#rfc.section.5.1">5.1.</a> <a href="#client-registration-request" id="client-registration-request">Client Registration Request</a>
 </h1>
 <p id="rfc.section.5.1.p.1">This specification extends the client registration request defined in <a href="#RFC7591" class="xref">[RFC7591]</a>.</p>
-<p id="rfc.section.5.1.p.2">This operation registers a combination of client, end user application, and optionally one or more intermediaries with an authorization server. The authorization server assigns a unique client identifier (and optionally a client secret) that represents the combination of all the entities described in the registration request.</p>
-<p id="rfc.section.5.1.p.3">To register, the client or developer sends an HTTP POST as described in Section 3.1 of <a href="#RFC7591" class="xref">[RFC7591]</a>, with an additional property named "end_user_application" containing a JSON object with the end user application registration information, and optionally a property named "intermediaries" with a JSON array of objects of each intermediary's registration information.</p>
+<p id="rfc.section.5.1.p.2">This operation registers a combination of client and one or more intermediaries with an authorization server. The authorization server assigns a unique client identifier (and optionally a client secret) that represents the combination of all the entities described in the registration request.</p>
+<p id="rfc.section.5.1.p.3">To register, the client or developer sends an HTTP POST as described in Section 3.1 of <a href="#RFC7591" class="xref">[RFC7591]</a>, with an additional property named "intermediaries" with a JSON array of objects of each intermediary's registration information.</p>
 <p id="rfc.section.5.1.p.4">For example, the client could send the following registration request to the client registration endpoint using its OAuth 2.0 access token it has previously obtained using the client credentials grant.</p>
 <p id="rfc.section.5.1.p.5">The following is a non-normative example request:</p>
 <pre>
@@ -513,25 +512,19 @@
     Authorization: Bearer 8IGFGXKXZBV5LL38Y3X1
 
     {
-      "client_name": "My Example Client",
+      "client_name": "User-Recognizable App Name",
       "redirect_uris": [
         "https://client.example.org/callback"
       ],
-      "logo_uri": "https://client.example.org/logo.png",
-      "end_user_application": {
-        "name": "User-Recognizable App Name",
-        "description": "This application is what the user 
-          is interacting with in their browser",
-        "uri": "https://example.net/",
-        "logo_uri": "https://example.net/logo.png",
-        "contacts": [
-          "support@example.net"
-        ]
-      },
+      "client_uri": "https://example.net/",
+      "logo_uri": "https://example.net/logo.png",
+      "contacts": [
+        "support@example.net"
+      ],
       "intermediaries": [
         {
           "name": "Partner App Name",
-          "description": "An application that may also receive 
+          "description": "An application that may also receive
             this user's data when the user authorizes the client",
           "uri": "https://partner.example/",
           "logo_uri": "https://partner.example/logo.png",
@@ -546,8 +539,8 @@
 <a href="#rfc.section.5.2">5.2.</a> <a href="#client-registration-response" id="client-registration-response">Client Registration Response</a>
 </h1>
 <p id="rfc.section.5.2.p.1">This specification extends the client information response defined in <a href="#RFC7591" class="xref">[RFC7591]</a> and <a href="#RFC7592" class="xref">[RFC7592]</a>.</p>
-<p id="rfc.section.5.2.p.2">Upon a successful registration request, the authorization server returns a client identifier for the combination of the client, end user application, and any intermediaries specified in the request.</p>
-<p id="rfc.section.5.2.p.3">In addition to the response fields defined in Section 3.2 of <a href="#RFC7591" class="xref">[RFC7591]</a> and Section 3 of <a href="#RFC7592" class="xref">[RFC7592]</a>, the response MUST also contain all registered metadata about the end user application and any intermediaries. The authorization server MAY reject or replace any of the requested metadata values submitted during the registration and substitute them with suitable values.</p>
+<p id="rfc.section.5.2.p.2">Upon a successful registration request, the authorization server returns a client identifier for the combination of the client and any intermediaries specified in the request.</p>
+<p id="rfc.section.5.2.p.3">In addition to the response fields defined in Section 3.2 of <a href="#RFC7591" class="xref">[RFC7591]</a> and Section 3 of <a href="#RFC7592" class="xref">[RFC7592]</a>, the response MUST also contain all registered metadata about the intermediaries. The authorization server MAY reject or replace any of the requested metadata values submitted during the registration and substitute them with suitable values.</p>
 <p id="rfc.section.5.2.p.4">The following is a non-normative example response of a successful registration:</p>
 <pre>
     HTTP/1.1 201 Created
@@ -562,25 +555,18 @@
       "token_endpoint_auth_method": "client_secret_basic",
       "registration_client_uri": "https://server.example.com/client/tmzaAMkyWlH3",
       "registration_access_token": "MphaAqDaZT86C93ENWRZcf3dfU2dW6POASo8dFXa",
-      "client_name": "My Example Client",
+      "client_name": "User-Recognizable App Name",
+      "client_uri": "https://example.net/",
       "redirect_uris": [
         "https://client.example.org/callback"
       ],
-      "logo_uri": "https://client.example.org/logo.png",
-      "end_user_application": {
-        "name": "User-Recognizable App Name",
-        "description": "This application is what the user is interacting 
-          with in their browser",
-        "uri": "https://example.net/",
-        "logo_uri": "https://example.net/logo.png",
-        "contacts": [
-          "support@example.net"
-        ]
-      },
+      "contacts": [
+        "support@example.net"
+      ],
       "intermediaries": [
         {
           "name": "Partner App Name",
-          "description": "An application that may also receive 
+          "description": "An application that may also receive
             this user's data when the user authorizes the client",
           "uri": "https://partner.example/",
           "logo_uri": "https://partner.example/logo.png",
@@ -595,11 +581,11 @@
 <h1 id="rfc.section.5.3">
 <a href="#rfc.section.5.3">5.3.</a> <a href="#client-read-request" id="client-read-request">Client Read Request</a>
 </h1>
-<p id="rfc.section.5.3.p.1">This specification extends the client read request defined in <a href="#RFC7592" class="xref">[RFC7592]</a> to include the additional metadata properties in the response that describe the end user application and intermediaries. No additional behavior is prescribed by this specification.</p>
+<p id="rfc.section.5.3.p.1">This specification extends the client read request defined in <a href="#RFC7592" class="xref">[RFC7592]</a> to include the additional metadata properties in the response that describe the intermediaries. No additional behavior is prescribed by this specification.</p>
 <h1 id="rfc.section.5.4">
 <a href="#rfc.section.5.4">5.4.</a> <a href="#client-update-request" id="client-update-request">Client Update Request</a>
 </h1>
-<p id="rfc.section.5.4.p.1">This specification extends the client update request defined in <a href="#RFC7592" class="xref">[RFC7592]</a> to be able to update the additional metadata properties that describe the end user application and intermediaries.</p>
+<p id="rfc.section.5.4.p.1">This specification extends the client update request defined in <a href="#RFC7592" class="xref">[RFC7592]</a> to be able to update the additional metadata properties that describe the intermediaries.</p>
 <p id="rfc.section.5.4.p.2">The additional properties are provided in the update request in the same format as in the initial registration request.</p>
 <p id="rfc.section.5.4.p.3">Since these values were asserted by the client in the initial registration, there is no need to prescribe any additional security model around the ability to update them, even though these represent additional parties.</p>
 <h1 id="rfc.section.5.5">
@@ -607,12 +593,10 @@
 </h1>
 <p id="rfc.section.5.5.p.1">No new behavior is prescribed for delete requests beyond that defined in <a href="#RFC7592" class="xref">[RFC7592]</a>.</p>
 <h1 id="rfc.section.6">
-<a href="#rfc.section.6">6.</a> <a href="#providing-end-user-application-details-in-the-authorization-request" id="providing-end-user-application-details-in-the-authorization-request">Providing End-User Application Details in the Authorization Request</a>
+<a href="#rfc.section.6">6.</a> <a href="#providing-intermediaty-details-in-the-authorization-request" id="providing-intermediaty-details-in-the-authorization-request">Providing Intermediaty Details in the Authorization Request</a>
 </h1>
-<p id="rfc.section.6.p.1">When the authorization server begins a request from an OAuth client identifier that has been registered with additional end user application or intermediary information, it MUST display the additional parties in the consent UI visible to the end user.</p>
-<p id="rfc.section.6.p.2">The authorization server MAY choose to emphasize or make the end user application information the primary information displayed in the consent screen. This is because the end user application is likely the most recognizable entity to the end user, and the end user may not be aware that it is actually a different organization's OAuth client that is the one making requests for the user's data.</p>
-<p id="rfc.section.6.p.3">The authorization server chooses how best to display the additional information, but it MUST include at least the name of the end user application, intermediaries, and client, and SHOULD include the logo of each as well.</p>
-<p id="rfc.section.6.p.4">Once an access token has been issued to this client, the client uses the access token to make requests at the resource server on behalf of the specific end user application on behalf of the end user.</p>
+<p id="rfc.section.6.p.1">When the authorization server begins a request from an OAuth client identifier that has been registered with additional intermediary information, it MUST display the additional parties in the consent UI visible to the end user.</p>
+<p id="rfc.section.6.p.2">The authorization server chooses how best to display the additional information, but it MUST include at least the name of the intermediaries and client, and SHOULD include the logo of each as well.</p>
 <h1 id="rfc.section.7">
 <a href="#rfc.section.7">7.</a> <a href="#security-considerations" id="security-considerations">Security Considerations</a>
 </h1>
@@ -621,7 +605,7 @@
 <h1 id="rfc.section.8">
 <a href="#rfc.section.8">8.</a> <a href="#acknowledgements" id="acknowledgements">Acknowledgements</a>
 </h1>
-<p id="rfc.section.8.p.1">The authors would like to thank Ryan Christiansen and Preston McFarland for their initial contributions of the concepts behind this specification. The authors would also like to thank Don Cardinal, Ryan Christiansen and Preston McFarland for their reviews of this specification. Additionally the work of the OAuth Working Group on the referenced and related specifications that this specification builds upon is much appreciated.</p>
+<p id="rfc.section.8.p.1">The author would like to thank Ryan Christiansen and Preston McFarland for their initial contributions of the concepts behind this specification. The author would also like to thank Don Cardinal, Ryan Christiansen and Preston McFarland for their reviews of this specification, as well as Anil Mahalaha and other members of the Financial Data Exchange working group. Additionally the work of the OAuth Working Group on the referenced and related specifications that this specification builds upon is much appreciated.</p>
 <h1 id="rfc.references">
 <a href="#rfc.references">9.</a> Normative References</h1>
 <table><tbody>
@@ -687,7 +671,7 @@
 </li>
 <li>3.   <a href="#rfc.section.3">Terminology</a>
 </li>
-<li>4.   <a href="#rfc.section.4">End User Application and Intermediary Metadata</a>
+<li>4.   <a href="#rfc.section.4">Client Intermediary Metadata</a>
 </li>
 <li>5.   <a href="#rfc.section.5">Client Registration Endpoint</a>
 </li>
@@ -701,7 +685,7 @@
 </li>
 <li>5.5.   <a href="#rfc.section.5.5">Client Delete Request</a>
 </li>
-</ul><li>6.   <a href="#rfc.section.6">Providing End-User Application Details in the Authorization Request</a>
+</ul><li>6.   <a href="#rfc.section.6">Providing Intermediaty Details in the Authorization Request</a>
 </li>
 <li>7.   <a href="#rfc.section.7">Security Considerations</a>
 </li>

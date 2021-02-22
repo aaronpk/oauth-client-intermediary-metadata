@@ -4,12 +4,12 @@
 
 Open Authentication Protocol                                  A. Parecki
 Internet-Draft                                                      Okta
-Intended status: Standards Track                       November 06, 2020
-Expires: May 10, 2021
+Intended status: Standards Track                       February 22, 2021
+Expires: August 26, 2021
 
 
                  OAuth 2.0 Client Intermediary Metadata
-          draft-parecki-oauth-client-intermediary-metadata-02
+          draft-parecki-oauth-client-intermediary-metadata-03
 
 Abstract
 
@@ -34,11 +34,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on May 10, 2021.
+   This Internet-Draft will expire on August 26, 2021.
 
 Copyright Notice
 
-   Copyright (c) 2020 IETF Trust and the persons identified as the
+   Copyright (c) 2021 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -53,35 +53,35 @@ Copyright Notice
 
 
 
-Parecki                   Expires May 10, 2021                  [Page 1]
+Parecki                  Expires August 26, 2021                [Page 1]
 
-Internet-Draft   OAuth 2.0 Client Intermediary Metadata    November 2020
+Internet-Draft   OAuth 2.0 Client Intermediary Metadata    February 2021
 
 
 1.  Introduction
 
-   In some applications of OAuth, an OAuth client is acting on behalf of
-   one or more intermediary or user-facing applications, and is not the
-   entity that the user has an established relationship with.
+   In some applications of OAuth, there may be multiple legal entities
+   which have access to or process data retrieved by an OAuth client.
+   In the traditional OAuth model, a "client_id" represents only a
+   single application, and so the OAuth consent screen lists just one
+   third party: the OAuth client.
 
-   In the traditional OAuth model, a "client_id" represents only one
-   application, and so the OAuth consent screen lists just one third
-   party: the OAuth client.  In these cases, it is not appropriate to
-   list only the actual OAuth client or only the user-facing
-   application.  Listing only the actual OAuth client would be confusing
-   to the user, since the user does not have a relationship with this
-   entity.  Listing only the user-facing application would be inaccurate
-   and misrepresent the situation, since the user would be unaware that
-   their data is actually being handled by additional parties.
+   In this situation, in order to comply with various local laws and
+   regulations, the user needs to be informed by the authorization
+   server of the list of entities that will have access to their data
+   after authorizing the client.
+
+   The existing Dynamic Client Registration ([RFC7591]) specification
+   lacks a mechanism for communicating a list of additional parties that
+   may have access to the user's data.
 
    This specification extends [RFC7591] and [RFC7592] to define a
    mechanism for including information about the additional parties
    involved in an OAuth transaction by including information about the
-   additional intermediaries as well as the user-facing application into
-   the Dynamic Client Registration request.  This specification also
-   defines requirements of the OAuth authorization server to present
-   this information about the additional parties in the OAuth consent
-   screen during an OAuth transaction.
+   additional intermediaries into the Dynamic Client Registration
+   request.  This specification also defines requirements of the OAuth
+   authorization server to present this information about the additional
+   parties in the OAuth consent screen during an OAuth transaction.
 
 2.  Notational Conventions
 
@@ -100,18 +100,18 @@ Internet-Draft   OAuth 2.0 Client Intermediary Metadata    November 2020
 
    "OAuth":  In this document, "OAuth" refers to OAuth 2.0, [RFC6749].
 
-   "End User Application (EUA)":  The software that the end user
-      interacts with and has a relationship with, which is not the same
-      as the OAuth client interacting with the Resource Server.
+   "Client":  "Client" has the same definition as in OAuth 2.0, but is
+      worth pointing out that the client in this context may be operated
+      by a different legal entity than is described by the client name.
 
    "Intermediary":  One or more entities that the user's data will pass
       through or be shared with by using the OAuth client.  This
 
 
 
-Parecki                   Expires May 10, 2021                  [Page 2]
+Parecki                  Expires August 26, 2021                [Page 2]
 
-Internet-Draft   OAuth 2.0 Client Intermediary Metadata    November 2020
+Internet-Draft   OAuth 2.0 Client Intermediary Metadata    February 2021
 
 
       information is voluntarily provided by the OAuth client, and is
@@ -119,17 +119,12 @@ Internet-Draft   OAuth 2.0 Client Intermediary Metadata    November 2020
       organization providing the Client and the organization providing
       the Resource Server.
 
-   "Client":  "Client" has the same definition as in OAuth 2.0, but is
-      worth pointing out explicitly here that the client in this case is
-      requesting and obtaining permission from the user to access their
-      resources while acting on behalf of the End User Application.
+4.  Client Intermediary Metadata
 
-4.  End User Application and Intermediary Metadata
-
-   Registered end user applications, as well as intermediaries, have a
-   set of metadata values associated with the client identifier of the
-   client that represents them in the OAuth transaction, such as a user-
-   visible name, logo, and URL.
+   Registered client intermediaries have a set of metadata values
+   associated with the client identifier of the client that represents
+   them in the OAuth transaction, such as a user-visible name, logo, and
+   URL.
 
    Like the OAuth client metadata defined in [RFC7591] and [RFC7592],
    these metadata values are used in the following ways:
@@ -151,47 +146,47 @@ Internet-Draft   OAuth 2.0 Client Intermediary Metadata    November 2020
    Some fields are expected to be displayed in the OAuth consent UI and
    are designated accordingly.
 
-   "name"
+   "intermediary_name"
 
-   REQUIRED.  A human-readable name of the end user application or
-   intermediary.  Authorization servers MUST display this field to the
-   end user on the OAuth consent screen.
+   REQUIRED.  A human-readable name of intermediary party.
+   Authorization servers MUST display this field to the end user on the
+   OAuth consent screen.
 
    "description"
 
-   REQUIRED.  A human-readable description of the end user application
-   or intermediary.  This is not intended to be displayed in the OAuth
-   consent screen.
+   OPTIONAL.  A human-readable description of the intermediary.  This is
+   not intended to be displayed in the OAuth consent screen.
+
+   "intermediaty_uri"
+
+   A URL string of a web page providing information about the
+   intermediary.  If present, the authorization server SHOULD display
+   this URL to the end user in a clickable fashion.  It is RECOMMENDED
 
 
 
-Parecki                   Expires May 10, 2021                  [Page 3]
+Parecki                  Expires August 26, 2021                [Page 3]
 
-Internet-Draft   OAuth 2.0 Client Intermediary Metadata    November 2020
+Internet-Draft   OAuth 2.0 Client Intermediary Metadata    February 2021
 
 
-   "uri"
-
-   A URL string of a web page providing information about the end user
-   application or intermediary.  If present, the authorization server
-   SHOULD display this URL to the end user in a clickable fashion.  It
-   is RECOMMENDED that clients always send this field.  The value of
-   this field MUST point to a valid web page.
+   that clients always send this field.  The value of this field MUST
+   point to a valid web page.
 
    "logo_uri"
 
-   A URL string that references a logo for this end user application or
-   intermediary.  If present, the authorization server SHOULD display
-   this image to the end user in the OAuth consent screen.  The value of
-   this field MUST be a valid image file.
+   A URL string that references a logo for this intermediary.  If
+   present, the authorization server SHOULD display this image to the
+   end user in the OAuth consent screen.  The value of this field MUST
+   be a valid image file.
 
    "contacts"
 
    Array of strings representing ways to contact people responsible for
-   this end user application or intermediary, typically email addresses
-   or phone numbers.  The authorization server MAY display these to the
-   end user in the OAuth consent screen.  See Section 6 of [RFC7591] for
-   information on Privacy Considerations.
+   this intermediary, typically email addresses or phone numbers.  The
+   authorization server MAY display these to the end user in the OAuth
+   consent screen.  See Section 6 of [RFC7591] for information on
+   Privacy Considerations.
 
 5.  Client Registration Endpoint
 
@@ -199,39 +194,37 @@ Internet-Draft   OAuth 2.0 Client Intermediary Metadata    November 2020
    [RFC7591].
 
    Since this specification provides a mechanism for a client to assert
-   user information about additional parties other than itself, the
+   information about additional parties other than itself, the
    registration endpoint MUST be protected by an OAuth 2.0 access token
    obtained by the client.  The method by which the initial access token
    is obtained by the client or developer is out of scope of this
    specification, but is likely to be obtained using the client
-   credentials grant.
+   credentials grant or manual out-of-band registration.
 
 5.1.  Client Registration Request
 
    This specification extends the client registration request defined in
    [RFC7591].
 
-   This operation registers a combination of client, end user
-   application, and optionally one or more intermediaries with an
-   authorization server.  The authorization server assigns a unique
-   client identifier (and optionally a client secret) that represents
-   the combination of all the entities described in the registration
-   request.
-
-
-
-
-Parecki                   Expires May 10, 2021                  [Page 4]
-
-Internet-Draft   OAuth 2.0 Client Intermediary Metadata    November 2020
-
+   This operation registers a combination of client and one or more
+   intermediaries with an authorization server.  The authorization
+   server assigns a unique client identifier (and optionally a client
+   secret) that represents the combination of all the entities described
+   in the registration request.
 
    To register, the client or developer sends an HTTP POST as described
    in Section 3.1 of [RFC7591], with an additional property named
-   "end_user_application" containing a JSON object with the end user
-   application registration information, and optionally a property named
    "intermediaries" with a JSON array of objects of each intermediary's
    registration information.
+
+
+
+
+
+Parecki                  Expires August 26, 2021                [Page 4]
+
+Internet-Draft   OAuth 2.0 Client Intermediary Metadata    February 2021
+
 
    For example, the client could send the following registration request
    to the client registration endpoint using its OAuth 2.0 access token
@@ -246,21 +239,15 @@ Internet-Draft   OAuth 2.0 Client Intermediary Metadata    November 2020
        Authorization: Bearer 8IGFGXKXZBV5LL38Y3X1
 
        {
-         "client_name": "My Example Client",
+         "client_name": "User-Recognizable App Name",
          "redirect_uris": [
            "https://client.example.org/callback"
          ],
-         "logo_uri": "https://client.example.org/logo.png",
-         "end_user_application": {
-           "name": "User-Recognizable App Name",
-           "description": "This application is what the user
-             is interacting with in their browser",
-           "uri": "https://example.net/",
-           "logo_uri": "https://example.net/logo.png",
-           "contacts": [
-             "support@example.net"
-           ]
-         },
+         "client_uri": "https://example.net/",
+         "logo_uri": "https://example.net/logo.png",
+         "contacts": [
+           "support@example.net"
+         ],
          "intermediaries": [
            {
              "name": "Partner App Name",
@@ -275,68 +262,32 @@ Internet-Draft   OAuth 2.0 Client Intermediary Metadata    November 2020
          ]
        }
 
-
-
-Parecki                   Expires May 10, 2021                  [Page 5]
-
-Internet-Draft   OAuth 2.0 Client Intermediary Metadata    November 2020
-
-
 5.2.  Client Registration Response
 
    This specification extends the client information response defined in
    [RFC7591] and [RFC7592].
 
    Upon a successful registration request, the authorization server
-   returns a client identifier for the combination of the client, end
-   user application, and any intermediaries specified in the request.
+   returns a client identifier for the combination of the client and any
+   intermediaries specified in the request.
 
    In addition to the response fields defined in Section 3.2 of
    [RFC7591] and Section 3 of [RFC7592], the response MUST also contain
-   all registered metadata about the end user application and any
-   intermediaries.  The authorization server MAY reject or replace any
-   of the requested metadata values submitted during the registration
-   and substitute them with suitable values.
+   all registered metadata about the intermediaries.  The authorization
+
+
+
+Parecki                  Expires August 26, 2021                [Page 5]
+
+Internet-Draft   OAuth 2.0 Client Intermediary Metadata    February 2021
+
+
+   server MAY reject or replace any of the requested metadata values
+   submitted during the registration and substitute them with suitable
+   values.
 
    The following is a non-normative example response of a successful
    registration:
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Parecki                   Expires May 10, 2021                  [Page 6]
-
-Internet-Draft   OAuth 2.0 Client Intermediary Metadata    November 2020
-
 
     HTTP/1.1 201 Created
     Content-Type: application/json
@@ -350,21 +301,14 @@ Internet-Draft   OAuth 2.0 Client Intermediary Metadata    November 2020
       "token_endpoint_auth_method": "client_secret_basic",
       "registration_client_uri": "https://server.example.com/client/tmzaAMkyWlH3",
       "registration_access_token": "MphaAqDaZT86C93ENWRZcf3dfU2dW6POASo8dFXa",
-      "client_name": "My Example Client",
+      "client_name": "User-Recognizable App Name",
+      "client_uri": "https://example.net/",
       "redirect_uris": [
         "https://client.example.org/callback"
       ],
-      "logo_uri": "https://client.example.org/logo.png",
-      "end_user_application": {
-        "name": "User-Recognizable App Name",
-        "description": "This application is what the user is interacting
-          with in their browser",
-        "uri": "https://example.net/",
-        "logo_uri": "https://example.net/logo.png",
-        "contacts": [
-          "support@example.net"
-        ]
-      },
+      "contacts": [
+        "support@example.net"
+      ],
       "intermediaries": [
         {
           "name": "Partner App Name",
@@ -389,23 +333,23 @@ Internet-Draft   OAuth 2.0 Client Intermediary Metadata    November 2020
 
 
 
-Parecki                   Expires May 10, 2021                  [Page 7]
+Parecki                  Expires August 26, 2021                [Page 6]
 
-Internet-Draft   OAuth 2.0 Client Intermediary Metadata    November 2020
+Internet-Draft   OAuth 2.0 Client Intermediary Metadata    February 2021
 
 
 5.3.  Client Read Request
 
    This specification extends the client read request defined in
    [RFC7592] to include the additional metadata properties in the
-   response that describe the end user application and intermediaries.
-   No additional behavior is prescribed by this specification.
+   response that describe the intermediaries.  No additional behavior is
+   prescribed by this specification.
 
 5.4.  Client Update Request
 
    This specification extends the client update request defined in
    [RFC7592] to be able to update the additional metadata properties
-   that describe the end user application and intermediaries.
+   that describe the intermediaries.
 
    The additional properties are provided in the update request in the
    same format as in the initial registration request.
@@ -420,35 +364,17 @@ Internet-Draft   OAuth 2.0 Client Intermediary Metadata    November 2020
    No new behavior is prescribed for delete requests beyond that defined
    in [RFC7592].
 
-6.  Providing End-User Application Details in the Authorization Request
+6.  Providing Intermediaty Details in the Authorization Request
 
    When the authorization server begins a request from an OAuth client
-   identifier that has been registered with additional end user
-   application or intermediary information, it MUST display the
-   additional parties in the consent UI visible to the end user.
-
-   The authorization server MAY choose to emphasize or make the end user
-   application information the primary information displayed in the
-   consent screen.  This is because the end user application is likely
-   the most recognizable entity to the end user, and the end user may
-   not be aware that it is actually a different organization's OAuth
-   client that is the one making requests for the user's data.
+   identifier that has been registered with additional intermediary
+   information, it MUST display the additional parties in the consent UI
+   visible to the end user.
 
    The authorization server chooses how best to display the additional
-   information, but it MUST include at least the name of the end user
-   application, intermediaries, and client, and SHOULD include the logo
-   of each as well.
-
-   Once an access token has been issued to this client, the client uses
-   the access token to make requests at the resource server on behalf of
-   the specific end user application on behalf of the end user.
-
-
-
-Parecki                   Expires May 10, 2021                  [Page 8]
-
-Internet-Draft   OAuth 2.0 Client Intermediary Metadata    November 2020
-
+   information, but it MUST include at least the name of the
+   intermediaries and client, and SHOULD include the logo of each as
+   well.
 
 7.  Security Considerations
 
@@ -460,19 +386,28 @@ Internet-Draft   OAuth 2.0 Client Intermediary Metadata    November 2020
    with any URLs received in the registration request such as
    "logo_uri", "tos_uri", and "uri", as these values may be displayed to
    end users.  [RFC7591] recommends requiring that these URIs have a
+
+
+
+Parecki                  Expires August 26, 2021                [Page 7]
+
+Internet-Draft   OAuth 2.0 Client Intermediary Metadata    February 2021
+
+
    matching host and scheme as the defined "redirect_uri"s, and that
    they are resolvable URIs.  See section 5 of [RFC7591] for more
    details.
 
 8.  Acknowledgements
 
-   The authors would like to thank Ryan Christiansen and Preston
+   The author would like to thank Ryan Christiansen and Preston
    McFarland for their initial contributions of the concepts behind this
-   specification.  The authors would also like to thank Don Cardinal,
+   specification.  The author would also like to thank Don Cardinal,
    Ryan Christiansen and Preston McFarland for their reviews of this
-   specification.  Additionally the work of the OAuth Working Group on
-   the referenced and related specifications that this specification
-   builds upon is much appreciated.
+   specification, as well as Anil Mahalaha and other members of the
+   Financial Data Exchange working group.  Additionally the work of the
+   OAuth Working Group on the referenced and related specifications that
+   this specification builds upon is much appreciated.
 
 9.  Normative References
 
@@ -499,13 +434,6 @@ Internet-Draft   OAuth 2.0 Client Intermediary Metadata    November 2020
               Protocol", RFC 7592, DOI 10.17487/RFC7592, July 2015,
               <https://www.rfc-editor.org/info/rfc7592>.
 
-
-
-Parecki                   Expires May 10, 2021                  [Page 9]
-
-Internet-Draft   OAuth 2.0 Client Intermediary Metadata    November 2020
-
-
 Author's Address
 
    Aaron Parecki
@@ -517,44 +445,4 @@ Author's Address
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Parecki                   Expires May 10, 2021                 [Page 10]
+Parecki                  Expires August 26, 2021                [Page 8]
