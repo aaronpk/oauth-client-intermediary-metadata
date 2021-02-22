@@ -76,9 +76,10 @@ the following terms:
 "OAuth":
 : In this document, "OAuth" refers to OAuth 2.0, {{RFC6749}}.
 
-"End User Application (EUA)":
-: The software that the end user interacts with and has a relationship with,
-  which is not the same as the OAuth client interacting with the Resource Server.
+"Client":
+: "Client" has the same definition as in OAuth 2.0, but is worth pointing out
+  that the client in this context may be operated by a different legal entity than is
+  described by the client name.
 
 "Intermediary":
 : One or more entities that the user's data will pass through or be shared with by
@@ -86,16 +87,11 @@ the following terms:
   client, and is typically enforced by a business relationship between the organization
   providing the Client and the organization providing the Resource Server.
 
-"Client":
-: "Client" has the same definition as in OAuth 2.0, but is worth pointing out explicitly
-  that the client in this context is requesting and obtaining permission from the user
-  to access their resources while acting on behalf of the End User Application.
 
+Client Intermediary Metadata
+============================
 
-End User Application and Intermediary Metadata
-==============================================
-
-Registered end user applications, as well as intermediaries, have a set of metadata values
+Registered client intermediaries have a set of metadata values
 associated with the client identifier of the client that represents them in the OAuth transaction,
 such as a user-visible name, logo, and URL.
 
@@ -115,25 +111,25 @@ are defined in terms of their JSON ({{RFC7159}}) representations.
 
 Some fields are expected to be displayed in the OAuth consent UI and are designated accordingly.
 
-`name`
+`intermediary_name`
 
-REQUIRED. A human-readable name of the end user application or intermediary. Authorization servers MUST display this field to the end user on the OAuth consent screen.
+REQUIRED. A human-readable name of intermediary party. Authorization servers MUST display this field to the end user on the OAuth consent screen.
 
 `description`
 
-REQUIRED. A human-readable description of the end user application or intermediary. This is not intended to be displayed in the OAuth consent screen.
+OPTIONAL. A human-readable description of the intermediary. This is not intended to be displayed in the OAuth consent screen.
 
-`uri`
+`intermediaty_uri`
 
-A URL string of a web page providing information about the end user application or intermediary. If present, the authorization server SHOULD display this URL to the end user in a clickable fashion. It is RECOMMENDED that clients always send this field. The value of this field MUST point to a valid web page.
+A URL string of a web page providing information about the intermediary. If present, the authorization server SHOULD display this URL to the end user in a clickable fashion. It is RECOMMENDED that clients always send this field. The value of this field MUST point to a valid web page.
 
 `logo_uri`
 
-A URL string that references a logo for this end user application or intermediary. If present, the authorization server SHOULD display this image to the end user in the OAuth consent screen. The value of this field MUST be a valid image file.
+A URL string that references a logo for this intermediary. If present, the authorization server SHOULD display this image to the end user in the OAuth consent screen. The value of this field MUST be a valid image file.
 
 `contacts`
 
-Array of strings representing ways to contact people responsible for this end user application or intermediary, typically email addresses or phone numbers. The authorization server MAY display these to the end user in the OAuth consent screen. See Section 6 of {{RFC7591}} for information on Privacy Considerations.
+Array of strings representing ways to contact people responsible for this intermediary, typically email addresses or phone numbers. The authorization server MAY display these to the end user in the OAuth consent screen. See Section 6 of {{RFC7591}} for information on Privacy Considerations.
 
 
 Client Registration Endpoint
@@ -141,7 +137,7 @@ Client Registration Endpoint
 
 The client registration endpoint is described in Section 3 of {{RFC7591}}.
 
-Since this specification provides a mechanism for a client to assert user information about additional parties other than itself, the registration endpoint MUST be protected by an OAuth 2.0 access token obtained by the client. The method by which the initial access token is obtained by the client or developer is out of scope of this specification, but is likely to be obtained using the client credentials grant.
+Since this specification provides a mechanism for a client to assert information about additional parties other than itself, the registration endpoint MUST be protected by an OAuth 2.0 access token obtained by the client. The method by which the initial access token is obtained by the client or developer is out of scope of this specification, but is likely to be obtained using the client credentials grant or manual out-of-band registration.
 
 
 Client Registration Request
@@ -149,9 +145,9 @@ Client Registration Request
 
 This specification extends the client registration request defined in {{RFC7591}}.
 
-This operation registers a combination of client, end user application, and optionally one or more intermediaries with an authorization server. The authorization server assigns a unique client identifier (and optionally a client secret) that represents the combination of all the entities described in the registration request.
+This operation registers a combination of client and one or more intermediaries with an authorization server. The authorization server assigns a unique client identifier (and optionally a client secret) that represents the combination of all the entities described in the registration request.
 
-To register, the client or developer sends an HTTP POST as described in Section 3.1 of {{RFC7591}}, with an additional property named "end_user_application" containing a JSON object with the end user application registration information, and optionally a property named "intermediaries" with a JSON array of objects of each intermediary's registration information.
+To register, the client or developer sends an HTTP POST as described in Section 3.1 of {{RFC7591}}, with an additional property named "intermediaries" with a JSON array of objects of each intermediary's registration information.
 
 For example, the client could send the following registration request to the client registration endpoint using its OAuth 2.0 access token it has previously obtained using the client credentials grant.
 
@@ -164,21 +160,15 @@ The following is a non-normative example request:
         Authorization: Bearer 8IGFGXKXZBV5LL38Y3X1
 
         {
-          "client_name": "My Example Client",
+          "client_name": "User-Recognizable App Name",
           "redirect_uris": [
             "https://client.example.org/callback"
           ],
-          "logo_uri": "https://client.example.org/logo.png",
-          "end_user_application": {
-            "name": "User-Recognizable App Name",
-            "description": "This application is what the user
-              is interacting with in their browser",
-            "uri": "https://example.net/",
-            "logo_uri": "https://example.net/logo.png",
-            "contacts": [
-              "support@example.net"
-            ]
-          },
+          "client_uri": "https://example.net/",
+          "logo_uri": "https://example.net/logo.png",
+          "contacts": [
+            "support@example.net"
+          ],
           "intermediaries": [
             {
               "name": "Partner App Name",
@@ -198,9 +188,9 @@ Client Registration Response
 
 This specification extends the client information response defined in {{RFC7591}} and {{RFC7592}}.
 
-Upon a successful registration request, the authorization server returns a client identifier for the combination of the client, end user application, and any intermediaries specified in the request.
+Upon a successful registration request, the authorization server returns a client identifier for the combination of the client and any intermediaries specified in the request.
 
-In addition to the response fields defined in Section 3.2 of {{RFC7591}} and Section 3 of {{RFC7592}}, the response MUST also contain all registered metadata about the end user application and any intermediaries. The authorization server MAY reject or replace any of the requested metadata values submitted during the registration and substitute them with suitable values.
+In addition to the response fields defined in Section 3.2 of {{RFC7591}} and Section 3 of {{RFC7592}}, the response MUST also contain all registered metadata about the intermediaries. The authorization server MAY reject or replace any of the requested metadata values submitted during the registration and substitute them with suitable values.
 
 The following is a non-normative example response of a successful registration:
 
@@ -216,21 +206,14 @@ The following is a non-normative example response of a successful registration:
           "token_endpoint_auth_method": "client_secret_basic",
           "registration_client_uri": "https://server.example.com/client/tmzaAMkyWlH3",
           "registration_access_token": "MphaAqDaZT86C93ENWRZcf3dfU2dW6POASo8dFXa",
-          "client_name": "My Example Client",
+          "client_name": "User-Recognizable App Name",
+          "client_uri": "https://example.net/",
           "redirect_uris": [
             "https://client.example.org/callback"
           ],
-          "logo_uri": "https://client.example.org/logo.png",
-          "end_user_application": {
-            "name": "User-Recognizable App Name",
-            "description": "This application is what the user is interacting
-              with in their browser",
-            "uri": "https://example.net/",
-            "logo_uri": "https://example.net/logo.png",
-            "contacts": [
-              "support@example.net"
-            ]
-          },
+          "contacts": [
+            "support@example.net"
+          ],
           "intermediaries": [
             {
               "name": "Partner App Name",
@@ -251,13 +234,13 @@ The `registration_client_uri` and `registration_access_token` properties are req
 Client Read Request
 -------------------
 
-This specification extends the client read request defined in {{RFC7592}} to include the additional metadata properties in the response that describe the end user application and intermediaries. No additional behavior is prescribed by this specification.
+This specification extends the client read request defined in {{RFC7592}} to include the additional metadata properties in the response that describe the intermediaries. No additional behavior is prescribed by this specification.
 
 
 Client Update Request
 ---------------------
 
-This specification extends the client update request defined in {{RFC7592}} to be able to update the additional metadata properties that describe the end user application and intermediaries.
+This specification extends the client update request defined in {{RFC7592}} to be able to update the additional metadata properties that describe the intermediaries.
 
 The additional properties are provided in the update request in the same format as in the initial registration request.
 
@@ -270,16 +253,12 @@ Client Delete Request
 No new behavior is prescribed for delete requests beyond that defined in {{RFC7592}}.
 
 
-Providing End-User Application Details in the Authorization Request
-===================================================================
+Providing Intermediaty Details in the Authorization Request
+===========================================================
 
-When the authorization server begins a request from an OAuth client identifier that has been registered with additional end user application or intermediary information, it MUST display the additional parties in the consent UI visible to the end user.
+When the authorization server begins a request from an OAuth client identifier that has been registered with additional intermediary information, it MUST display the additional parties in the consent UI visible to the end user.
 
-The authorization server MAY choose to emphasize or make the end user application information the primary information displayed in the consent screen. This is because the end user application is likely the most recognizable entity to the end user, and the end user may not be aware that it is actually a different organization's OAuth client that is the one making requests for the user's data.
-
-The authorization server chooses how best to display the additional information, but it MUST include at least the name of the end user application, intermediaries, and client, and SHOULD include the logo of each as well.
-
-Once an access token has been issued to this client, the client uses the access token to make requests at the resource server on behalf of the specific end user application on behalf of the end user.
+The authorization server chooses how best to display the additional information, but it MUST include at least the name of the intermediaries and client, and SHOULD include the logo of each as well.
 
 
 Security Considerations
